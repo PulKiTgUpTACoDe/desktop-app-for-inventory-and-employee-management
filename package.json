@@ -12,7 +12,8 @@
     "build:vite": "vite build",
     "build:electron": "tsc -p tsconfig.node.json && electron-builder",
     "preview": "vite preview",
-    "dist": "npm run build && electron-builder --publish=never"
+    "dist": "npm run build && electron-builder --publish=never",
+    "seed": "tsx src/lib/seed-data.ts"
   },
   "repository": {
     "type": "git",
@@ -68,6 +69,7 @@
     "postcss": "^8.4.0",
     "prisma": "^6.15.0",
     "tailwindcss": "^3.3.0",
+    "tsx": "^4.20.5",
     "typescript": "^5.0.0",
     "vite": "^5.0.0",
     "wait-on": "^7.2.0"
