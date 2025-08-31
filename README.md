@@ -1,110 +1,131 @@
-# 📦 Swaraj Enterprises ERP System (Desktop App)
+# Swaraj Enterprises ERP - Desktop Application
 
-## 📖 Overview
+A Windows-only desktop application built with Electron.js, React, TypeScript, and Tailwind CSS for comprehensive inventory and employee management.
 
-Swaraj Enterprises ERP is a **Windows desktop application** designed for managing a wholesale **Import–Export business**.
-It streamlines **Inventory, Purchase, Sales, Payroll, and Reporting** workflows in a single unified tool.
+## Features
 
-The app is built with **Electron.js + React (TypeScript)**, styled using **TailwindCSS + ShadCN UI**, and backed by **PostgreSQL with Prisma ORM** (future integration).
+- **Modern UI**: Built with React 18, TypeScript, and Tailwind CSS
+- **Desktop App**: Cross-platform desktop application using Electron
+- **Responsive Design**: Clean, professional interface with ShadCN UI components
+- **Modular Architecture**: Well-organized component structure for easy maintenance
 
-This project is intended to **digitize and automate operations** for small-to-medium businesses dealing in wholesale trading.
+## Tech Stack
 
----
+- **Frontend**: React 18 + TypeScript + Tailwind CSS
+- **Desktop**: Electron.js
+- **Build Tool**: Vite
+- **UI Components**: ShadCN UI
+- **Database**: PostgreSQL + Prisma (configured but not implemented yet)
+- **Package Manager**: npm
 
-## 🚀 Features
-
-✅ **Inventory Management**
-
-* Track stock levels for each product
-* Organize products by categories and brands
-* Auto stock update on purchases/sales
-
-✅ **Purchase Management**
-
-* Create & manage purchase orders with suppliers
-* Record goods received and update stock automatically
-
-✅ **Sales Management**
-
-* Create sales orders for vendors
-* Generate invoices automatically
-* Track pending vs completed payments
-
-✅ **Payroll Management**
-
-* Maintain employee records
-* Process monthly payroll
-* Generate payslips in PDF format
-
-✅ **Reports & Insights**
-
-* Sales, Purchase, Payroll, and Stock reports
-* Export reports as **PDF or Email**
-* Monthly summary insights
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-
-* **Electron.js** → Desktop app shell
-* **React (TypeScript)** → User Interface
-* **TailwindCSS** → Styling
-* **ShadCN UI** → Modern, prebuilt UI components
-* **Lucide Icons** → Beautiful icons for navigation
-
-### Backend
-
-* **Node.js + Vite** → Build system & app runtime
-* **Prisma ORM** (future integration) → Database access
-* **PostgreSQL** → Relational database for persistence
-
-### Packaging & Deployment
-
-* **Electron Builder** → Generate Windows `.exe` installer
-* **Cross-env** → Environment variable management
-* **Dotenv** → Manage `.env` secrets
-
----
-
-## 📂 Project Structure
+## Project Structure
 
 ```
-swaraj-erp/
-├── electron/           # Electron main process files
-│   ├── main.ts
-│   └── preload.ts
-├── src/                # React frontend
-│   ├── components/     # Reusable UI components (buttons, forms, tables)
-│   ├── pages/          # App pages (Login, Dashboard, Inventory, Sales, Payroll, Reports)
-│   ├── lib/            # Utilities & helpers
-│   ├── App.tsx         # Main React app entry
-│   └── index.tsx
-├── prisma/             # Prisma schema (future integration)
-│   └── schema.prisma
-├── public/             # Static assets
-├── dist/               # Build output
-├── package.json
-├── tailwind.config.js
-├── tsconfig.json
-└── README.md
+├── electron/           # Electron main process code
+│   ├── main.ts        # Main process entry point
+│   └── preload.js     # Preload script for security
+├── src/               # React frontend source code
+│   ├── components/    # Reusable UI components
+│   ├── pages/        # Application pages
+│   ├── lib/          # Utility functions and helpers
+│   ├── App.tsx       # Main application component
+│   ├── main.tsx      # React entry point
+│   └── index.css     # Global styles and Tailwind
+├── assets/            # Static assets and icons
+├── dist/              # Build output directory
+└── dist-electron/     # Electron build output
 ```
 
----
+## Prerequisites
 
-## 👨‍💻 Author
+- Node.js 18+ 
+- npm or yarn
+- Windows 10/11 (primary target)
 
-**Mandeep Gupta**
-Project: *Enterprise Resource Planning System for Swaraj Enterprises*
+## Installation
 
----
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd desktop-app-for-inventory-and-employee-management
+```
 
-## 📌 Notes
+2. Install dependencies:
+```bash
+npm install
+```
 
-* This version is **Admin-only** (single login).
-* Vendors/Suppliers will be considered for **future multi-user expansion**.
-* App is designed specifically for **Windows OS**.
+## Development
 
----
+To run the application in development mode:
+
+```bash
+npm run dev
+```
+
+This will:
+- Start the Vite dev server on port 3000
+- Launch the Electron app with hot reload
+- Open the application window
+
+## Building
+
+To build the application for production:
+
+```bash
+npm run build
+```
+
+This will:
+- Build the React frontend
+- Compile the Electron main process
+- Create a Windows installer (.exe)
+
+## Usage
+
+### Login
+- **Username**: `admin`
+- **Password**: `admin123`
+
+### Features
+- **Dashboard**: Overview of system modules
+- **Inventory**: Manage stock levels and products
+- **Purchases**: Track supplier orders and costs
+- **Sales**: Monitor revenue and customer orders
+- **Payroll**: Employee salary management
+- **Reports**: Analytics and insights
+- **Settings**: System configuration
+
+## Database Setup
+
+**Note**: Prisma and PostgreSQL are included as dependencies but not yet configured.
+
+The `.env` file contains a placeholder database URL:
+```
+DATABASE_URL="postgresql://user:password@localhost:5432/swaraj_erp"
+```
+
+Database integration will be implemented in future updates.
+
+## Scripts
+
+- `npm run dev` - Start development server with Electron
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run dist` - Create distributable package
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## License
+
+This project is licensed under the ISC License.
+
+## Support
+
+For support and questions, please open an issue in the GitHub repository.
 
