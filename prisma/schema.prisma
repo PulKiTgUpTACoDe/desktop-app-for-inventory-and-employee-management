@@ -1,0 +1,342 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  email     String   @unique
+  fullName  String
+  role      String   @default("admin")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  createdProducts         Product[]         @relation("ProductCreatedBy")
+  updatedProducts         Product[]         @relation("ProductUpdatedBy")
+  createdCategories       ProductCategory[] @relation("CategoryCreatedBy")
+  updatedCategories       ProductCategory[] @relation("CategoryUpdatedBy")
+  createdBrands           ProductBrand[]    @relation("BrandCreatedBy")
+  updatedBrands           ProductBrand[]    @relation("BrandUpdatedBy")
+  createdSuppliers        Supplier[]        @relation("SupplierCreatedBy")
+  updatedSuppliers        Supplier[]        @relation("SupplierUpdatedBy")
+  createdVendors          Vendor[]          @relation("VendorCreatedBy")
+  updatedVendors          Vendor[]          @relation("VendorUpdatedBy")
+  createdPurchaseOrders   PurchaseOrder[]   @relation("PurchaseOrderCreatedBy")
+  processedPurchaseOrders PurchaseOrder[]   @relation("PurchaseOrderProcessedBy")
+  createdSalesOrders      SalesOrder[]      @relation("SalesOrderCreatedBy")
+  processedSalesOrders    SalesOrder[]      @relation("SalesOrderProcessedBy")
+  createdEmployees        Employee[]        @relation("EmployeeCreatedBy")
+  updatedEmployees        Employee[]        @relation("EmployeeUpdatedBy")
+  createdPayrolls         Payroll[]         @relation("PayrollCreatedBy")
+  processedPayrolls       Payroll[]         @relation("PayrollProcessedBy")
+
+  @@map("admin_users")
+}
+
+model ProductCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String
+  updatedBy   String
+
+  // Relations
+  products Product[]
+  creator  AdminUser @relation("CategoryCreatedBy", fields: [createdBy], references: [id])
+  updater  AdminUser @relation("CategoryUpdatedBy", fields: [updatedBy], references: [id])
+
+  @@map("product_categories")
+}
+
+model ProductBrand {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String
+  updatedBy   String
+
+  // Relations
+  products Product[]
+  creator  AdminUser @relation("BrandCreatedBy", fields: [createdBy], references: [id])
+  updater  AdminUser @relation("BrandUpdatedBy", fields: [updatedBy], references: [id])
+
+  @@map("product_brands")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  sku         String   @unique
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  costPrice   Decimal  @db.Decimal(10, 2)
+  categoryId  String
+  brandId     String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String
+  updatedBy   String
+
+  // Relations
+  category           ProductCategory     @relation(fields: [categoryId], references: [id])
+  brand              ProductBrand        @relation(fields: [brandId], references: [id])
+  stock              Stock[]
+  purchaseOrderItems PurchaseOrderItem[]
+  salesOrderItems    SalesOrderItem[]
+  creator            AdminUser           @relation("ProductCreatedBy", fields: [createdBy], references: [id])
+  updater            AdminUser           @relation("ProductUpdatedBy", fields: [updatedBy], references: [id])
+
+  @@map("products")
+}
+
+model Supplier {
+  id            String   @id @default(cuid())
+  name          String
+  email         String?
+  phone         String?
+  address       String?
+  contactPerson String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  createdBy     String
+  updatedBy     String
+
+  // Relations
+  purchaseOrders PurchaseOrder[]
+  creator        AdminUser       @relation("SupplierCreatedBy", fields: [createdBy], references: [id])
+  updater        AdminUser       @relation("SupplierUpdatedBy", fields: [updatedBy], references: [id])
+
+  @@map("suppliers")
+}
+
+model Vendor {
+  id            String   @id @default(cuid())
+  name          String
+  email         String?
+  phone         String?
+  address       String?
+  contactPerson String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  createdBy     String
+  updatedBy     String
+
+  // Relations
+  salesOrders SalesOrder[]
+  creator     AdminUser    @relation("VendorCreatedBy", fields: [createdBy], references: [id])
+  updater     AdminUser    @relation("VendorUpdatedBy", fields: [updatedBy], references: [id])
+
+  @@map("vendors")
+}
+
+model Stock {
+  id        String   @id @default(cuid())
+  productId String
+  quantity  Int
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("stock")
+}
+
+model PurchaseOrder {
+  id               String    @id @default(cuid())
+  orderNumber      String    @unique
+  supplierId       String
+  orderDate        DateTime
+  expectedDelivery DateTime?
+  status           String    @default("pending") // pending, confirmed, delivered, cancelled
+  totalAmount      Decimal   @db.Decimal(10, 2)
+  notes            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  createdBy        String
+  processedBy      String?
+
+  // Relations
+  supplier  Supplier            @relation(fields: [supplierId], references: [id])
+  items     PurchaseOrderItem[]
+  creator   AdminUser           @relation("PurchaseOrderCreatedBy", fields: [createdBy], references: [id])
+  processor AdminUser?          @relation("PurchaseOrderProcessedBy", fields: [processedBy], references: [id])
+
+  @@map("purchase_orders")
+}
+
+model PurchaseOrderItem {
+  id              String   @id @default(cuid())
+  purchaseOrderId String
+  productId       String
+  quantity        Int
+  unitPrice       Decimal  @db.Decimal(10, 2)
+  totalPrice      Decimal  @db.Decimal(10, 2)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+  product       Product       @relation(fields: [productId], references: [id])
+
+  @@map("purchase_order_items")
+}
+
+model SalesOrder {
+  id               String    @id @default(cuid())
+  orderNumber      String    @unique
+  vendorId         String
+  orderDate        DateTime
+  expectedDelivery DateTime?
+  status           String    @default("pending") // pending, confirmed, shipped, delivered, cancelled
+  totalAmount      Decimal   @db.Decimal(10, 2)
+  notes            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  createdBy        String
+  processedBy      String?
+
+  // Relations
+  vendor    Vendor           @relation(fields: [vendorId], references: [id])
+  items     SalesOrderItem[]
+  invoice   Invoice?
+  creator   AdminUser        @relation("SalesOrderCreatedBy", fields: [createdBy], references: [id])
+  processor AdminUser?       @relation("SalesOrderProcessedBy", fields: [processedBy], references: [id])
+
+  @@map("sales_orders")
+}
+
+model SalesOrderItem {
+  id           String   @id @default(cuid())
+  salesOrderId String
+  productId    String
+  quantity     Int
+  unitPrice    Decimal  @db.Decimal(10, 2)
+  totalPrice   Decimal  @db.Decimal(10, 2)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  salesOrder SalesOrder @relation(fields: [salesOrderId], references: [id])
+  product    Product    @relation(fields: [productId], references: [id])
+
+  @@map("sales_order_items")
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  invoiceNumber String   @unique
+  salesOrderId  String   @unique
+  invoiceDate   DateTime
+  dueDate       DateTime
+  totalAmount   Decimal  @db.Decimal(10, 2)
+  status        String   @default("pending") // pending, paid, overdue, cancelled
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  salesOrder SalesOrder @relation(fields: [salesOrderId], references: [id])
+  payments   Payment[]
+
+  @@map("invoices")
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  invoiceId     String
+  amount        Decimal  @db.Decimal(10, 2)
+  paymentDate   DateTime
+  paymentMethod String
+  reference     String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  invoice Invoice @relation(fields: [invoiceId], references: [id])
+
+  @@map("payments")
+}
+
+model Employee {
+  id         String   @id @default(cuid())
+  employeeId String   @unique
+  firstName  String
+  lastName   String
+  email      String   @unique
+  phone      String?
+  address    String?
+  position   String
+  department String
+  hireDate   DateTime
+  salary     Decimal  @db.Decimal(10, 2)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  createdBy  String
+  updatedBy  String
+
+  // Relations
+  payrolls Payroll[]
+  creator  AdminUser @relation("EmployeeCreatedBy", fields: [createdBy], references: [id])
+  updater  AdminUser @relation("EmployeeUpdatedBy", fields: [updatedBy], references: [id])
+
+  @@map("employees")
+}
+
+model Payroll {
+  id          String   @id @default(cuid())
+  employeeId  String
+  month       Int
+  year        Int
+  basicSalary Decimal  @db.Decimal(10, 2)
+  allowances  Decimal  @db.Decimal(10, 2)
+  deductions  Decimal  @db.Decimal(10, 2)
+  netSalary   Decimal  @db.Decimal(10, 2)
+  status      String   @default("pending") // pending, processed, paid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String
+  processedBy String?
+
+  // Relations
+  employee  Employee   @relation(fields: [employeeId], references: [id])
+  payslip   Payslip?
+  creator   AdminUser  @relation("PayrollCreatedBy", fields: [createdBy], references: [id])
+  processor AdminUser? @relation("PayrollProcessedBy", fields: [processedBy], references: [id])
+
+  @@unique([employeeId, month, year])
+  @@map("payrolls")
+}
+
+model Payslip {
+  id            String   @id @default(cuid())
+  payrollId     String   @unique
+  payslipNumber String   @unique
+  issueDate     DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  payroll Payroll @relation(fields: [payrollId], references: [id])
+
+  @@map("payslips")
+}
