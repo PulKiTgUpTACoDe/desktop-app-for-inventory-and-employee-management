@@ -1,16 +1,9 @@
 import React from "react";
-import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
-interface DashboardProps {
-  onLogout: () => void;
-}
-
-const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
+const Dashboard: React.FC = () => {
   return (
     <div className="flex h-screen bg-gray-100">
-      <Sidebar onLogout={onLogout} />
-
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
 

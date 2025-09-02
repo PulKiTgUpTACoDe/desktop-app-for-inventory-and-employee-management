@@ -9,21 +9,25 @@ import {
   Settings,
   LogOut
 } from 'lucide-react'
+import { useAuth } from '../auth.tsx';
+import { Link, useNavigate } from 'react-router-dom';
 
-interface SidebarProps {
-  onLogout: () => void
-}
-
-const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
+const Sidebar: React.FC = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const navigationItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, href: '#', current: true },
-    { name: 'Inventory', icon: Package, href: '#', current: false },
-    { name: 'Purchases', icon: ShoppingCart, href: '#', current: false },
-    { name: 'Sales', icon: TrendingUp, href: '#', current: false },
-    { name: 'Payroll', icon: Users, href: '#', current: false },
-    { name: 'Reports', icon: FileText, href: '#', current: false },
-    { name: 'Settings', icon: Settings, href: '#', current: false },
-  ]
+    { name: 'Dashboard', icon: LayoutDashboard, href: '/dashboard', current: true },
+    { name: 'Inventory', icon: Package, href: '/inventory', current: false },
+    { name: 'Suppliers', icon: ShoppingCart, href: '/suppliers', current: false },
+    { name: 'Vendors', icon: TrendingUp, href: '/vendors', current: false },
+    { name: 'Purchase Orders', icon: ShoppingCart, href: '/purchaseorders', current: false },
+    { name: 'Sales Orders', icon: TrendingUp, href: '/salesorders', current: false },
+    { name: 'Employees', icon: Users, href: '/employees', current: false },
+    { name: 'Payrolls', icon: Users, href: '/payrolls', current: false },
+    { name: 'Invoices', icon: FileText, href: '/invoices', current: false },
+    { name: 'Payments', icon: FileText, href: '/payments', current: false },
+    { name: 'Settings', icon: Settings, href: '/settings', current: false },
+  ];
 
   return (
     <div className="flex h-full w-64 flex-col bg-gray-800">
@@ -36,8 +40,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
             <ul role="list" className="-mx-2 space-y-1">
               {navigationItems.map((item) => (
                 <li key={item.name}>
-                  <a
-                    href={item.href}
+                  <Link
+                    to={item.href}
                     className={`
                       group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold
                       ${item.current 
@@ -48,14 +52,17 @@ const Sidebar: React.FC<SidebarProps> = ({ onLogout }) => {
                   >
                     <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
                     {item.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </li>
           <li className="mt-auto">
             <button
-              onClick={onLogout}
+              onClick={() => {
+                logout();
+                navigate('/');
+              }}
               className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-900 hover:text-white w-full"
             >
               <LogOut className="h-6 w-6 shrink-0" aria-hidden="true" />

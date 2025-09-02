@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-
+import { useNavigate } from 'react-router-dom';
 interface LoginProps {
   onLogin: () => void
 }
@@ -8,13 +8,14 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
     // Hardcoded validation for admin
     if (username === 'admin' && password === 'admin123') {
-      onLogin()
+      onLogin();
+      navigate('/dashboard');
     } else {
       setError('Invalid username or password')
     }

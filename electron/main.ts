@@ -68,5 +68,21 @@ app.on('window-all-closed', () => {
   }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+
+// Prisma and IPC setup
+import { ipcMain } from 'electron';
+import prisma from '../src/lib/prisma';
+
+ipcMain.handle('get-products', async () => {
+  try {
+    const products = await prisma.product.findMany({
+      include: {
+        category: true,
+        brand: true,
+      },
+    });
+    return { success: true, data: products };
+  } catch (error) {
+    return { success: false, error: error };
+  }
+});

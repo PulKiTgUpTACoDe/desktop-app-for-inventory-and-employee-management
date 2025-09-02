@@ -14,5 +14,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["electron"]
+  "include": [
+    "electron",
+    "src/**/*.ts",
+    "src/lib/prisma.ts"
+  ]
 }
