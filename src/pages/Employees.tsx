@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EmployeeFormValues, employeeSchema } from "../types/employee";
+import axios from "axios";
 
 const Employees: React.FC = () => {
   const {
@@ -25,10 +26,18 @@ const Employees: React.FC = () => {
     },
   });
 
-  const onSubmit = async (data: EmployeeFormValues) => {
-    console.log("Employee submit =>", data);
+const onSubmit = async (data: EmployeeFormValues) => {
+  try {
+    const res = await axios.post(`http://localhost:3000/api/employees`, data);
+    console.log("✅ Employee created:", res.data);
+
     reset();
-  };
+  } catch (err: any) {
+    console.error("❌ Error creating employee:", err);
+  }
+};
+
+
   return (
     <div className="flex h-screen bg-gray-100">
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -154,6 +163,7 @@ const Employees: React.FC = () => {
                   <button
                     disabled={isSubmitting}
                     className="bg-blue-600 text-white px-4 py-2 rounded"
+                    type="submit"
                   >
                     {isSubmitting ? "Saving..." : "Add Employee"}
                   </button>

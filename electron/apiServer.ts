@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { employeeService } from "../src/api/employee"; // Prisma logic
+import { employeeAPI } from "../src/api/employee"; // Prisma logic
 import { EmployeeFormValues } from "../src/types/employee";
 import dotenv from "dotenv";
 
@@ -17,13 +17,13 @@ app.use(bodyParser.json());
 
 // Get all employees
 app.get("/employees", async (_req, res) => {
-  const employees = await employeeService.getAll();
+  const employees = await employeeAPI.getAll();
   res.json(employees);
 });
 
 // Get employee by id
 app.get("/employees/:id", async (req, res) => {
-  const employee = await employeeService.getById(req.params.id);
+  const employee = await employeeAPI.getById(req.params.id);
   res.json(employee);
 });
 
@@ -31,7 +31,7 @@ app.get("/employees/:id", async (req, res) => {
 app.post("/employees", async (req, res) => {
   const data: EmployeeFormValues = req.body;
   const createdBy = "admin-user-id"; // later replace with real user id
-  const newEmployee = await employeeService.create(data, createdBy);
+  const newEmployee = await employeeAPI.create(data, createdBy);
   res.json(newEmployee);
 });
 
@@ -39,13 +39,13 @@ app.post("/employees", async (req, res) => {
 app.put("/employees/:id", async (req, res) => {
   const data: Partial<EmployeeFormValues> = req.body;
   const updatedBy = "admin-user-id";
-  const updatedEmployee = await employeeService.update(req.params.id, data, updatedBy);
+  const updatedEmployee = await employeeAPI.update(req.params.id, data, updatedBy);
   res.json(updatedEmployee);
 });
 
 // Delete employee
 app.delete("/employees/:id", async (req, res) => {
-  await employeeService.delete(req.params.id);
+  await employeeAPI.delete(req.params.id);
   res.json({ message: "Employee deleted" });
 });
 

@@ -1,7 +1,7 @@
 import prisma from "../lib/prisma";
 import { EmployeeFormValues } from "../types/employee"; 
 
-export const employeeService = {
+export const employeeAPI = {
   getAll: () =>
     prisma.employee.findMany({
       include: {
