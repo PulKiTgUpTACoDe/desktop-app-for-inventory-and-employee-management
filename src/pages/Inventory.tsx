@@ -1,29 +1,58 @@
-// Type augmentation for window.electronAPI
-declare global {
-  interface Window {
-    electronAPI?: {
-      getProducts?: () => Promise<{ success: boolean; data: any[] }>;
-      // add other methods as needed
-    };
-  }
-}
+import React, { useEffect, useState } from "react";
+import Header from "../components/Header";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+const productSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  sku: z.string().min(1, "SKU is required"),
+  price: z.number().min(0, "Price must be >= 0"),
+  costPrice: z.number().min(0, "Cost Price must be >= 0"),
+  category: z.string().min(1, "Category is required"),
+  brand: z.string().min(1, "Brand is required"),
+});
 
-import React, { useEffect, useState } from 'react';
-import Header from '../components/Header';
+type ProductFormValues = z.infer<typeof productSchema>;
 
 const Inventory: React.FC = () => {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<ProductFormValues[]>([]);
+
+  // React Hook Form setup
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ProductFormValues>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      sku: "",
+      price: 0,
+      costPrice: 0,
+      category: "",
+      brand: "",
+    },
+  });
 
   useEffect(() => {
     const fetchProducts = async () => {
+      // @ts-expect-error: electronAPI is injected by Electron preload script
       if (window.electronAPI?.getProducts) {
+        // @ts-expect-error: electronAPI is injected by Electron preload script
         const res = await window.electronAPI.getProducts();
-        if (res.success) setProducts(res.data);
+        if (res.success) setProducts(res.data as ProductFormValues[]);
       }
     };
     fetchProducts();
   }, []);
+
+  const onSubmit = async (data: ProductFormValues) => {
+    console.log("Adding product =>", data);
+    setProducts((prev) => [...prev, data]);
+    reset();
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -32,109 +61,118 @@ const Inventory: React.FC = () => {
         <main className="flex-1 overflow-y-auto p-6">
           <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Inventory</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                Inventory
+              </h2>
+
+              {/* ✅ Product Form with RHF */}
               <h2 className="text-xl font-bold mb-4">Products</h2>
-              {/* Product Form */}
-              <form className="bg-gray-50 p-4 rounded-lg mb-6 flex flex-wrap gap-4">
-                <input type="text" placeholder="Name" className="border p-2 rounded w-48" />
-                <input type="text" placeholder="SKU" className="border p-2 rounded w-48" />
-                <input type="number" placeholder="Price" className="border p-2 rounded w-32" />
-                <input type="number" placeholder="Cost Price" className="border p-2 rounded w-32" />
-                <input type="text" placeholder="Category" className="border p-2 rounded w-48" />
-                <input type="text" placeholder="Brand" className="border p-2 rounded w-48" />
-                <button className="bg-blue-600 text-white px-4 py-2 rounded">Add Product</button>
+              <form
+                className="bg-gray-50 p-4 rounded-lg mb-6 flex flex-wrap gap-4"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <div>
+                  <input
+                    {...register("name")}
+                    type="text"
+                    placeholder="Name"
+                    className="border p-2 rounded w-48"
+                  />
+                  {errors.name && (
+                    <p className="text-red-600 text-sm">{errors.name.message}</p>
+                  )}
+                </div>
+                <div>
+                  <input
+                    {...register("sku")}
+                    type="text"
+                    placeholder="SKU"
+                    className="border p-2 rounded w-48"
+                  />
+                  {errors.sku && (
+                    <p className="text-red-600 text-sm">{errors.sku.message}</p>
+                  )}
+                </div>
+                <div>
+                  <input
+                    {...register("price", { valueAsNumber: true })}
+                    type="number"
+                    placeholder="Price"
+                    className="border p-2 rounded w-32"
+                  />
+                  {errors.price && (
+                    <p className="text-red-600 text-sm">{errors.price.message}</p>
+                  )}
+                </div>
+                <div>
+                  <input
+                    {...register("costPrice", { valueAsNumber: true })}
+                    type="number"
+                    placeholder="Cost Price"
+                    className="border p-2 rounded w-32"
+                  />
+                  {errors.costPrice && (
+                    <p className="text-red-600 text-sm">
+                      {errors.costPrice.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <input
+                    {...register("category")}
+                    type="text"
+                    placeholder="Category"
+                    className="border p-2 rounded w-48"
+                  />
+                  {errors.category && (
+                    <p className="text-red-600 text-sm">
+                      {errors.category.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <input
+                    {...register("brand")}
+                    type="text"
+                    placeholder="Brand"
+                    className="border p-2 rounded w-48"
+                  />
+                  {errors.brand && (
+                    <p className="text-red-600 text-sm">{errors.brand.message}</p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                  {isSubmitting ? "Adding..." : "Add Product"}
+                </button>
               </form>
-              {/* Product List */}
+
+              {/* ✅ Products Table */}
               <table className="w-full mb-8 bg-white rounded shadow">
                 <thead>
                   <tr className="bg-gray-100">
                     <th className="p-2 text-left">Name</th>
                     <th className="p-2 text-left">SKU</th>
                     <th className="p-2 text-left">Price</th>
+                    <th className="p-2 text-left">Cost Price</th>
                     <th className="p-2 text-left">Category</th>
                     <th className="p-2 text-left">Brand</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="p-2">Sample Product</td>
-                    <td className="p-2">SKU123</td>
-                    <td className="p-2">100.00</td>
-                    <td className="p-2">Category A</td>
-                    <td className="p-2">Brand X</td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <h2 className="text-xl font-bold mt-8 mb-4">Categories</h2>
-              {/* Category Form */}
-              <form className="bg-gray-50 p-4 rounded-lg mb-6 flex gap-4">
-                <input type="text" placeholder="Name" className="border p-2 rounded w-48" />
-                <input type="text" placeholder="Description" className="border p-2 rounded w-64" />
-                <button className="bg-green-600 text-white px-4 py-2 rounded">Add Category</button>
-              </form>
-              {/* Category List */}
-              <table className="w-full mb-8 bg-white rounded shadow">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="p-2 text-left">Name</th>
-                    <th className="p-2 text-left">Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="p-2">Category A</td>
-                    <td className="p-2">Description of Category A</td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <h2 className="text-xl font-bold mt-8 mb-4">Brands</h2>
-              {/* Brand Form */}
-              <form className="bg-gray-50 p-4 rounded-lg mb-6 flex gap-4">
-                <input type="text" placeholder="Name" className="border p-2 rounded w-48" />
-                <input type="text" placeholder="Description" className="border p-2 rounded w-64" />
-                <button className="bg-purple-600 text-white px-4 py-2 rounded">Add Brand</button>
-              </form>
-              {/* Brand List */}
-              <table className="w-full mb-8 bg-white rounded shadow">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="p-2 text-left">Name</th>
-                    <th className="p-2 text-left">Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="p-2">Brand X</td>
-                    <td className="p-2">Description of Brand X</td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <h2 className="text-xl font-bold mt-8 mb-4">Stock</h2>
-              {/* Stock Form */}
-              <form className="bg-gray-50 p-4 rounded-lg mb-6 flex gap-4">
-                <input type="text" placeholder="Product" className="border p-2 rounded w-48" />
-                <input type="number" placeholder="Quantity" className="border p-2 rounded w-32" />
-                <input type="text" placeholder="Location" className="border p-2 rounded w-48" />
-                <button className="bg-orange-600 text-white px-4 py-2 rounded">Add Stock</button>
-              </form>
-              {/* Stock List */}
-              <table className="w-full mb-8 bg-white rounded shadow">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="p-2 text-left">Product</th>
-                    <th className="p-2 text-left">Quantity</th>
-                    <th className="p-2 text-left">Location</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="p-2">Sample Product</td>
-                    <td className="p-2">50</td>
-                    <td className="p-2">Warehouse 1</td>
-                  </tr>
+                  {products.map((p, i) => (
+                    <tr key={i}>
+                      <td className="p-2">{p.name}</td>
+                      <td className="p-2">{p.sku}</td>
+                      <td className="p-2">{p.price}</td>
+                      <td className="p-2">{p.costPrice}</td>
+                      <td className="p-2">{p.category}</td>
+                      <td className="p-2">{p.brand}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
