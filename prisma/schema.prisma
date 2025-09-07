@@ -278,7 +278,7 @@ model Payment {
 
 model Employee {
   id         String   @id @default(cuid())
-  employeeId String   @unique
+  employeeId String   @unique @default(cuid())
   firstName  String
   lastName   String
   email      String   @unique

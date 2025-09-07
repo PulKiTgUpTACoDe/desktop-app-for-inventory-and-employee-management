@@ -14,7 +14,7 @@ const payrollSchema = z.object({
   status: z.enum(["pending", "processed", "paid"]),
 });
 
-type PayrollFormValues = z.infer<typeof payrollSchema>;
+export type PayrollFormValues = z.infer<typeof payrollSchema>;
 
 const Payrolls: React.FC = () => {
   const {

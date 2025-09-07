@@ -1,6 +1,7 @@
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { fileURLToPath } from 'url'
+import { startApiServer } from "./apiServer";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -48,7 +49,8 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.whenReady().then(() => {
-  createWindow()
+  startApiServer();
+  createWindow();
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

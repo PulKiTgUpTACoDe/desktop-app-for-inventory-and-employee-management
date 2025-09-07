@@ -13,7 +13,7 @@ const paymentSchema = z.object({
   notes: z.string().optional(),
 });
 
-type PaymentFormValues = z.infer<typeof paymentSchema>;
+export type PaymentFormValues = z.infer<typeof paymentSchema>;
 
 const Payments: React.FC = () => {
   const {

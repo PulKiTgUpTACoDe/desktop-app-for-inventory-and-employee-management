@@ -12,7 +12,7 @@ const vendorSchema = z.object({
   contactPerson: z.string().optional().or(z.literal("")),
 });
 
-type VendorFormValues = z.infer<typeof vendorSchema>;
+export type VendorFormValues = z.infer<typeof vendorSchema>;
 
 const Vendors: React.FC = () => {
   const {

@@ -1,23 +1,8 @@
 import React from "react";
 import Header from "../components/Header";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const employeeSchema = z.object({
-  employeeId: z.string().min(1, "Employee ID is required"),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email"),
-  phone: z.string().optional().or(z.literal("")),
-  address: z.string().optional().or(z.literal("")),
-  position: z.string().min(1, "Position is required"),
-  department: z.string().min(1, "Department is required"),
-  hireDate: z.string().min(1, "Hire date is required"),
-  salary: z.number().min(0, "Salary must be >= 0"),
-});
-
-type EmployeeFormValues = z.infer<typeof employeeSchema>;
+import { EmployeeFormValues, employeeSchema } from "../types/employee";
 
 const Employees: React.FC = () => {
   const {
@@ -28,7 +13,6 @@ const Employees: React.FC = () => {
   } = useForm<EmployeeFormValues>({
     resolver: zodResolver(employeeSchema),
     defaultValues: {
-      employeeId: "",
       firstName: "",
       lastName: "",
       email: "",
@@ -59,19 +43,6 @@ const Employees: React.FC = () => {
                 className="bg-gray-50 p-4 rounded-lg mb-6 grid grid-cols-1 md:grid-cols-3 gap-4"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <div>
-                  <input
-                    {...register("employeeId")}
-                    type="text"
-                    placeholder="Employee ID"
-                    className="border p-2 rounded w-full"
-                  />
-                  {errors.employeeId && (
-                    <p className="text-red-600 text-sm mt-1">
-                      {errors.employeeId.message}
-                    </p>
-                  )}
-                </div>
                 <div>
                   <input
                     {...register("firstName")}

@@ -19,7 +19,7 @@ const purchaseOrderSchema = z.object({
   items: z.array(poItemSchema).min(1, "Add at least one item"),
 });
 
-type PurchaseOrderFormValues = z.infer<typeof purchaseOrderSchema>;
+export type PurchaseOrderFormValues = z.infer<typeof purchaseOrderSchema>;
 
 const PurchaseOrders: React.FC = () => {
   const {

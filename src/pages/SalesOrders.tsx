@@ -19,7 +19,7 @@ const salesOrderSchema = z.object({
   items: z.array(soItemSchema).min(1, "Add at least one item"),
 });
 
-type SalesOrderFormValues = z.infer<typeof salesOrderSchema>;
+export type SalesOrderFormValues = z.infer<typeof salesOrderSchema>;
 
 const SalesOrders: React.FC = () => {
   const {

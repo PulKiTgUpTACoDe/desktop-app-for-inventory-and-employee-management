@@ -14,7 +14,7 @@ const invoiceSchema = z.object({
     .enum(["pending", "paid", "overdue", "cancelled"]),
 });
 
-type InvoiceFormValues = z.infer<typeof invoiceSchema>;
+export type InvoiceFormValues = z.infer<typeof invoiceSchema>;
 
 const Invoices: React.FC = () => {
   const {

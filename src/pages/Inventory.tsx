@@ -13,7 +13,7 @@ const productSchema = z.object({
   brand: z.string().min(1, "Brand is required"),
 });
 
-type ProductFormValues = z.infer<typeof productSchema>;
+export type ProductFormValues = z.infer<typeof productSchema>;
 
 const Inventory: React.FC = () => {
   const [products, setProducts] = useState<ProductFormValues[]>([]);
