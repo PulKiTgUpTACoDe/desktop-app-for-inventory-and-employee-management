@@ -1,15 +1,51 @@
-import axios from "axios";
 import { EmployeeFormValues } from "../types/employee";
-import dotenv from "dotenv";
 
-dotenv.config();
-
-const API_URL = `http://localhost:${process.env.VITE_API_PORT || 4000}/employees`;
+// Declare the global electronAPI interface
+declare global {
+  interface Window {
+    electronAPI: {
+      getEmployees: () => Promise<{ success: boolean; data?: any; error?: any }>;
+      getEmployeeById: (id: string) => Promise<{ success: boolean; data?: any; error?: any }>;
+      createEmployee: (data: EmployeeFormValues) => Promise<{ success: boolean; data?: any; error?: any }>;
+      updateEmployee: (id: string, data: Partial<EmployeeFormValues>) => Promise<{ success: boolean; data?: any; error?: any }>;
+      deleteEmployee: (id: string) => Promise<{ success: boolean; message?: string; error?: any }>;
+    };
+  }
+}
 
 export const employeeService = {
-  getAll: () => axios.get(API_URL),
-  getById: (id: string) => axios.get(`${API_URL}/${id}`),
-  create: (data: EmployeeFormValues) => axios.post(API_URL, data),
-  update: (id: string, data: Partial<EmployeeFormValues>) => axios.put(`${API_URL}/${id}`, data),
-  delete: (id: string) => axios.delete(`${API_URL}/${id}`),
+  getAll: async () => {
+    if (!window.electronAPI) {
+      throw new Error('Electron API not available');
+    }
+    return window.electronAPI.getEmployees();
+  },
+
+  getById: async (id: string) => {
+    if (!window.electronAPI) {
+      throw new Error('Electron API not available');
+    }
+    return window.electronAPI.getEmployeeById(id);
+  },
+
+  create: async (data: EmployeeFormValues) => {
+    if (!window.electronAPI) {
+      throw new Error('Electron API not available');
+    }
+    return window.electronAPI.createEmployee(data);
+  },
+
+  update: async (id: string, data: Partial<EmployeeFormValues>) => {
+    if (!window.electronAPI) {
+      throw new Error('Electron API not available');
+    }
+    return window.electronAPI.updateEmployee(id, data);
+  },
+
+  delete: async (id: string) => {
+    if (!window.electronAPI) {
+      throw new Error('Electron API not available');
+    }
+    return window.electronAPI.deleteEmployee(id);
+  },
 };

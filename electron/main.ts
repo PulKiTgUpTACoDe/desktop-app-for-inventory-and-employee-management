@@ -74,7 +74,9 @@ app.on('window-all-closed', () => {
 // Prisma and IPC setup
 import { ipcMain } from 'electron';
 import prisma from '../src/lib/prisma';
+import { employeeAPI } from '../src/api/employee';
 
+// Products IPC handlers
 ipcMain.handle('get-products', async () => {
   try {
     const products = await prisma.product.findMany({
@@ -85,6 +87,75 @@ ipcMain.handle('get-products', async () => {
     });
     return { success: true, data: products };
   } catch (error) {
+    return { success: false, error: error };
+  }
+});
+
+// Employee IPC handlers
+ipcMain.handle('get-employees', async () => {
+  try {
+    const employees = await employeeAPI.getAll();
+    return { success: true, data: employees };
+  } catch (error) {
+    console.error('Error fetching employees:', error);
+    return { success: false, error: error };
+  }
+});
+
+ipcMain.handle('get-employee-by-id', async (_, id: string) => {
+  try {
+    const employee = await employeeAPI.getById(id);
+    return { success: true, data: employee };
+  } catch (error) {
+    console.error('Error fetching employee by id:', error);
+    return { success: false, error: error };
+  }
+});
+
+ipcMain.handle('create-employee', async (_, data) => {
+  try {
+    // Get the first admin user from the database
+    const adminUser = await prisma.adminUser.findFirst({
+      where: { role: 'admin' }
+    });
+
+    if (!adminUser) {
+      return { success: false, error: 'No admin user found' };
+    }
+
+    const newEmployee = await employeeAPI.create(data, adminUser.id);
+    return { success: true, data: newEmployee };
+  } catch (error) {
+    console.error('Error creating employee:', error);
+    return { success: false, error: error };
+  }
+});
+
+ipcMain.handle('update-employee', async (_, id: string, data) => {
+  try {
+    // Get the first admin user from the database
+    const adminUser = await prisma.adminUser.findFirst({
+      where: { role: 'admin' }
+    });
+
+    if (!adminUser) {
+      return { success: false, error: 'No admin user found' };
+    }
+
+    const updatedEmployee = await employeeAPI.update(id, data, adminUser.id);
+    return { success: true, data: updatedEmployee };
+  } catch (error) {
+    console.error('Error updating employee:', error);
+    return { success: false, error: error };
+  }
+});
+
+ipcMain.handle('delete-employee', async (_, id: string) => {
+  try {
+    await employeeAPI.delete(id);
+    return { success: true, message: "Employee deleted successfully" };
+  } catch (error) {
+    console.error('Error deleting employee:', error);
     return { success: false, error: error };
   }
 });
