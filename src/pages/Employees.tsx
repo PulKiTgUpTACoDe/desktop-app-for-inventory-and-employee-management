@@ -29,7 +29,6 @@ const Employees: React.FC = () => {
     },
   });
 
-  // Fetch employees on component mount
   useEffect(() => {
     fetchEmployees();
   }, []);

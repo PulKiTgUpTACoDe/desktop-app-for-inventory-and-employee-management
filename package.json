@@ -13,7 +13,9 @@
     "build:electron": "tsc -p tsconfig.node.json && electron-builder",
     "preview": "vite preview",
     "dist": "npm run build && electron-builder --publish=never",
-    "seed": "tsx src/lib/seed-data.ts"
+    "seed": "tsx src/lib/seed-data.ts",
+    "build:preload": "esbuild electron/preload.ts --bundle --platform=node --target=node18 --format=cjs --external:electron --outfile=dist-electron/electron/preload.js --sourcemap"
+  
   },
   "repository": {
     "type": "git",
@@ -68,6 +70,7 @@
     "cross-env": "^7.0.3",
     "electron": "^28.0.0",
     "electron-builder": "^24.0.0",
+    "esbuild": "^0.25.10",
     "postcss": "^8.4.0",
     "prisma": "^6.15.0",
     "tailwindcss": "^3.3.0",
