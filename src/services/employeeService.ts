@@ -13,41 +13,39 @@ declare global {
   }
 }
 
-const electronAPI = window.electronAPI
-
 export const employeeService = {
   getAll: async () => {
-    if (!electronAPI) {
+    if (!window.electronAPI) {
       throw new Error('Electron API not available');
     }
-    return electronAPI.getEmployees();
+    return window.electronAPI.getEmployees();
   },
 
   getById: async (id: string) => {
-    if (!electronAPI) {
+    if (!window.electronAPI) {
       throw new Error('Electron API not available');
     }
-    return electronAPI.getEmployeeById(id);
+    return window.electronAPI.getEmployeeById(id);
   },
 
   create: async (data: EmployeeFormValues) => {
-    if (!electronAPI) {
+    if (!window.electronAPI) {
       throw new Error('Electron API not available');
     }
-    return electronAPI.createEmployee(data);
+    return window.electronAPI.createEmployee(data);
   },
 
   update: async (id: string, data: Partial<EmployeeFormValues>) => {
-    if (!electronAPI) {
+    if (!window.electronAPI) {
       throw new Error('Electron API not available');
     }
-    return electronAPI.updateEmployee(id, data);
+    return window.electronAPI.updateEmployee(id, data);
   },
 
   delete: async (id: string) => {
-    if (!electronAPI) {
+    if (!window.electronAPI) {
       throw new Error('Electron API not available');
     }
-    return electronAPI.deleteEmployee(id);
+    return window.electronAPI.deleteEmployee(id);
   },
 };

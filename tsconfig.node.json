@@ -16,7 +16,10 @@
   },
   "include": [
     "electron",
-    "src/**/*.ts",
-    "src/lib/prisma.ts"
-, "src/services/employeeService.ts"  ]
+    "src/lib/prisma.ts",
+    "src/types/employee.ts"
+  ],
+  "exclude": [
+    "src/services/**/*"
+  ]
 }

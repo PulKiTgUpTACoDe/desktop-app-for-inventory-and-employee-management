@@ -51,13 +51,17 @@ const Employees: React.FC = () => {
 
   const onSubmit = async (data: EmployeeFormValues) => {
     try {
-      const response = await employeeService.create(data);
+      const payload = {
+        ...data,
+        hireDate: new Date(data.hireDate).toISOString(),
+        salary: Number(data.salary), 
+      };
+
+      const response = await employeeService.create(payload);
 
       if (response.success) {
         console.log("✅ Employee created:", response.data);
-        // Refresh the employee list
         await fetchEmployees();
-        // Reset the form
         reset();
       } else {
         console.error("❌ Error creating employee:", response.error);
