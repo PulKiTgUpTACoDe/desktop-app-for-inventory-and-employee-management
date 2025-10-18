@@ -10,6 +10,7 @@ dist-electron/
 
 # Prisma
 prisma/dev.db
+prisma/migrations
 prisma/dev.db-journal
 
 # Environment variables

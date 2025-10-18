@@ -2,7 +2,6 @@ import { ipcMain } from "electron";
 import prisma from "../../src/lib/prisma.js";
 import { EmployeeFormValues } from "../../src/types/employee.js";
 
-// Force Prisma objects into plain JSON
 function safeResult<T>(data: T) {
   return JSON.parse(JSON.stringify(data));
 }
