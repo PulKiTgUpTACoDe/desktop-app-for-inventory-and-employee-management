@@ -7,7 +7,6 @@ function safeResult<T>(data: T) {
 }
 
 export function employeeHandlers() {
-  console.log("[main] registering employee IPC handlers...");
 
   ipcMain.handle("get-employees", async () => {
     try {

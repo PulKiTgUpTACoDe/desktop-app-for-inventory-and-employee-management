@@ -12,4 +12,4 @@ export const employeeSchema = z.object({
     salary: z.number().min(0, "Salary must be >= 0"),
   });
   
-  export type EmployeeFormValues = z.infer<typeof employeeSchema>;
+export type EmployeeFormValues = z.infer<typeof employeeSchema>;

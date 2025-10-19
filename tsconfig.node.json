@@ -12,12 +12,12 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist-electron",
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
   },
   "include": [
     "electron",
     "src/lib/prisma.ts",
-    "src/types/employee.ts"
+    "src/types/*.ts",
   ],
   "exclude": [
     "src/services/**/*"
