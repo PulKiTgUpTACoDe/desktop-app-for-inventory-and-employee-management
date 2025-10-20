@@ -1,6 +1,8 @@
 import { EmployeeFormValues } from "./employee";
 import { ProductFormValues, CategoryFormValues, BrandFormValues } from "./inventory";
 import { SupplierFormValues } from "./supplier";
+import { VendorFormValues } from "./vendor";
+import { PurchaseOrderFormValues } from "./purchaseOrder";
 
 // Declare the global electronAPI interface
 declare global {
@@ -38,6 +40,21 @@ declare global {
             createSupplier: (data: SupplierFormValues) => Promise<{ success: boolean; data?: any; error?: any }>;
             updateSupplier: (id: string, data: Partial<SupplierFormValues>) => Promise<{ success: boolean; data?: any; error?: any }>;
             deleteSupplier: (id: string) => Promise<{ success: boolean; message?: string; error?: any }>;
+
+            // Vendor API
+            getVendors: () => Promise<{ success: boolean; data?: any; error?: any }>;
+            getVendorById: (id: string) => Promise<{ success: boolean; data?: any; error?: any }>;
+            createVendor: (data: VendorFormValues) => Promise<{ success: boolean; data?: any; error?: any }>;
+            updateVendor: (id: string, data: Partial<VendorFormValues>) => Promise<{ success: boolean; data?: any; error?: any }>;
+            deleteVendor: (id: string) => Promise<{ success: boolean; message?: string; error?: any }>;
+
+            // Purchase Order API
+            getPurchaseOrders: () => Promise<{ success: boolean; data?: any; error?: any }>;
+            getPurchaseOrderById: (id: string) => Promise<{ success: boolean; data?: any; error?: any }>;
+            createPurchaseOrder: (data: PurchaseOrderFormValues) => Promise<{ success: boolean; data?: any; error?: any }>;
+            updatePurchaseOrder: (id: string, data: Partial<PurchaseOrderFormValues>) => Promise<{ success: boolean; data?: any; error?: any }>;
+            deletePurchaseOrder: (id: string) => Promise<{ success: boolean; message?: string; error?: any }>;
+            updatePurchaseOrderStatus: (id: string, status: string) => Promise<{ success: boolean; data?: any; error?: any }>;
         };
     }
 }

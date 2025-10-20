@@ -1,20 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const vendorSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email").optional().or(z.literal("")),
-  phone: z.string().optional().or(z.literal("")),
-  address: z.string().optional().or(z.literal("")),
-  contactPerson: z.string().optional().or(z.literal("")),
-});
-
-export type VendorFormValues = z.infer<typeof vendorSchema>;
+import { vendorSchema, VendorFormValues } from "../types/vendor";
+import { vendorService } from "../services/vendorService";
 
 const Vendors: React.FC = () => {
+  const [vendors, setVendors] = useState<any[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -31,9 +24,31 @@ const Vendors: React.FC = () => {
     },
   });
 
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        const res = await vendorService.getAll();
+        if (res.success) setVendors(res.data || []);
+      } catch (error) {
+        console.error("Error fetching vendors:", error);
+      }
+    };
+    fetchVendors();
+  }, []);
+
   const onSubmit = async (data: VendorFormValues) => {
-    console.log("Vendor submit =>", data);
-    reset();
+    try {
+      const res = await vendorService.create(data);
+      if (res.success) {
+        const vendorsRes = await vendorService.getAll();
+        if (vendorsRes.success) setVendors(vendorsRes.data || []);
+        reset();
+      } else {
+        console.error("Error creating vendor:", res.error);
+      }
+    } catch (error) {
+      console.error("Error creating vendor:", error);
+    }
   };
   return (
     <div className="flex h-screen bg-gray-100">
@@ -115,7 +130,47 @@ const Vendors: React.FC = () => {
                 </div>
               </form>
               <h2 className="text-xl font-bold mt-8 mb-4">Vendor List</h2>
-              {/* Vendor List */}
+              {/* Vendor List Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full bg-white rounded shadow">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="p-3 text-left">Name</th>
+                      <th className="p-3 text-left">Email</th>
+                      <th className="p-3 text-left">Phone</th>
+                      <th className="p-3 text-left">Contact Person</th>
+                      <th className="p-3 text-left">Address</th>
+                      <th className="p-3 text-left">Status</th>
+                      <th className="p-3 text-left">Created</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {vendors.map((vendor, i) => (
+                      <tr key={vendor.id || i} className="border-t">
+                        <td className="p-3">{vendor.name}</td>
+                        <td className="p-3">{vendor.email || "N/A"}</td>
+                        <td className="p-3">{vendor.phone || "N/A"}</td>
+                        <td className="p-3">{vendor.contactPerson || "N/A"}</td>
+                        <td className="p-3">{vendor.address || "N/A"}</td>
+                        <td className="p-3">
+                          <span
+                            className={`px-2 py-1 rounded text-xs ${
+                              vendor.isActive
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {vendor.isActive ? "Active" : "Inactive"}
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          {new Date(vendor.createdAt).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </main>

@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url'
 import { employeeHandlers } from './handlers/employee_handlers.js'
 import { inventoryHandlers } from './handlers/inventory_handler.js'
 import { supplierHandlers } from './handlers/supplier_handler.js'
+import { vendorHandlers } from './handlers/vendor_handler.js'
+import { purchaseOrderHandlers } from './handlers/purchaseOrder_handler.js'
 import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 
@@ -64,6 +66,8 @@ async function initApp() {
     employeeHandlers()
     inventoryHandlers()
     supplierHandlers()
+    vendorHandlers()
+    purchaseOrderHandlers()
     createWindow()
 
     app.on('activate', () => {

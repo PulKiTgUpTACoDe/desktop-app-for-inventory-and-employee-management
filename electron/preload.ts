@@ -40,4 +40,22 @@ contextBridge.exposeInMainWorld("electronAPI", {
   updateSupplier: (id: string, data: any) =>
     ipcRenderer.invoke("update-supplier", id, data),
   deleteSupplier: (id: string) => ipcRenderer.invoke("delete-supplier", id),
+
+  // Vendor API
+  getVendors: () => ipcRenderer.invoke("get-vendors"),
+  getVendorById: (id: string) => ipcRenderer.invoke("get-vendor-by-id", id),
+  createVendor: (data: any) => ipcRenderer.invoke("create-vendor", data),
+  updateVendor: (id: string, data: any) =>
+    ipcRenderer.invoke("update-vendor", id, data),
+  deleteVendor: (id: string) => ipcRenderer.invoke("delete-vendor", id),
+
+  // Purchase Order API
+  getPurchaseOrders: () => ipcRenderer.invoke("get-purchase-orders"),
+  getPurchaseOrderById: (id: string) => ipcRenderer.invoke("get-purchase-order-by-id", id),
+  createPurchaseOrder: (data: any) => ipcRenderer.invoke("create-purchase-order", data),
+  updatePurchaseOrder: (id: string, data: any) =>
+    ipcRenderer.invoke("update-purchase-order", id, data),
+  deletePurchaseOrder: (id: string) => ipcRenderer.invoke("delete-purchase-order", id),
+  updatePurchaseOrderStatus: (id: string, status: string) =>
+    ipcRenderer.invoke("update-purchase-order-status", id, status),
 });
