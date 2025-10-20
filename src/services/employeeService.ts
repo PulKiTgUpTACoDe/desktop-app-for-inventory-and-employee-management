@@ -1,17 +1,5 @@
 import { EmployeeFormValues } from "../types/employee";
-
-// Declare the global electronAPI interface
-declare global {
-  interface Window {
-    electronAPI: {
-      getEmployees: () => Promise<{ success: boolean; data?: any; error?: any }>;
-      getEmployeeById: (id: string) => Promise<{ success: boolean; data?: any; error?: any }>;
-      createEmployee: (data: EmployeeFormValues) => Promise<{ success: boolean; data?: any; error?: any }>;
-      updateEmployee: (id: string, data: Partial<EmployeeFormValues>) => Promise<{ success: boolean; data?: any; error?: any }>;
-      deleteEmployee: (id: string) => Promise<{ success: boolean; message?: string; error?: any }>;
-    };
-  }
-}
+import "../types/electronAPI";
 
 export const employeeService = {
   getAll: async () => {

@@ -32,4 +32,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
   updateBrand: (id: string, data: any) =>
     ipcRenderer.invoke("update-brand", id, data),
   deleteBrand: (id: string) => ipcRenderer.invoke("delete-brand", id),
+
+  // Supplier API
+  getSuppliers: () => ipcRenderer.invoke("get-suppliers"),
+  getSupplierById: (id: string) => ipcRenderer.invoke("get-supplier-by-id", id),
+  createSupplier: (data: any) => ipcRenderer.invoke("create-supplier", data),
+  updateSupplier: (id: string, data: any) =>
+    ipcRenderer.invoke("update-supplier", id, data),
+  deleteSupplier: (id: string) => ipcRenderer.invoke("delete-supplier", id),
 });

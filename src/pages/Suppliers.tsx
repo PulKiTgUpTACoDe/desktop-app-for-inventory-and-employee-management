@@ -1,20 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const supplierSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email").optional().or(z.literal("")),
-  phone: z.string().optional().or(z.literal("")),
-  address: z.string().optional().or(z.literal("")),
-  contactPerson: z.string().optional().or(z.literal("")),
-});
-
-export type SupplierFormValues = z.infer<typeof supplierSchema>;
+import { supplierSchema, SupplierFormValues } from "../types/supplier";
+import { supplierService } from "../services/supplierService";
 
 const Suppliers: React.FC = () => {
+  const [suppliers, setSuppliers] = useState<any[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -31,9 +24,31 @@ const Suppliers: React.FC = () => {
     },
   });
 
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const res = await supplierService.getAll();
+        if (res.success) setSuppliers(res.data || []);
+      } catch (error) {
+        console.error("Error fetching suppliers:", error);
+      }
+    };
+    fetchSuppliers();
+  }, []);
+
   const onSubmit = async (data: SupplierFormValues) => {
-    console.log("Supplier submit =>", data);
-    reset();
+    try {
+      const res = await supplierService.create(data);
+      if (res.success) {
+        const suppliersRes = await supplierService.getAll();
+        if (suppliersRes.success) setSuppliers(suppliersRes.data || []);
+        reset();
+      } else {
+        console.error("Error creating supplier:", res.error);
+      }
+    } catch (error) {
+      console.error("Error creating supplier:", error);
+    }
   };
   return (
     <div className="flex h-screen bg-gray-100">
@@ -117,7 +132,49 @@ const Suppliers: React.FC = () => {
                 </div>
               </form>
               <h2 className="text-xl font-bold mt-8 mb-4">Supplier List</h2>
-              {/* Supplier List */}
+              {/* Supplier List Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full bg-white rounded shadow">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="p-3 text-left">Name</th>
+                      <th className="p-3 text-left">Email</th>
+                      <th className="p-3 text-left">Phone</th>
+                      <th className="p-3 text-left">Contact Person</th>
+                      <th className="p-3 text-left">Address</th>
+                      <th className="p-3 text-left">Status</th>
+                      <th className="p-3 text-left">Created</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {suppliers.map((supplier, i) => (
+                      <tr key={supplier.id || i} className="border-t">
+                        <td className="p-3">{supplier.name}</td>
+                        <td className="p-3">{supplier.email || "N/A"}</td>
+                        <td className="p-3">{supplier.phone || "N/A"}</td>
+                        <td className="p-3">
+                          {supplier.contactPerson || "N/A"}
+                        </td>
+                        <td className="p-3">{supplier.address || "N/A"}</td>
+                        <td className="p-3">
+                          <span
+                            className={`px-2 py-1 rounded text-xs ${
+                              supplier.isActive
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {supplier.isActive ? "Active" : "Inactive"}
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          {new Date(supplier.createdAt).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </main>
