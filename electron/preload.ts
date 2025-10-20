@@ -58,4 +58,42 @@ contextBridge.exposeInMainWorld("electronAPI", {
   deletePurchaseOrder: (id: string) => ipcRenderer.invoke("delete-purchase-order", id),
   updatePurchaseOrderStatus: (id: string, status: string) =>
     ipcRenderer.invoke("update-purchase-order-status", id, status),
+
+  // Sales Order API
+  getSalesOrders: () => ipcRenderer.invoke("get-sales-orders"),
+  getSalesOrderById: (id: string) => ipcRenderer.invoke("get-sales-order-by-id", id),
+  createSalesOrder: (data: any) => ipcRenderer.invoke("create-sales-order", data),
+  updateSalesOrder: (id: string, data: any) =>
+    ipcRenderer.invoke("update-sales-order", id, data),
+  deleteSalesOrder: (id: string) => ipcRenderer.invoke("delete-sales-order", id),
+  updateSalesOrderStatus: (id: string, status: string) =>
+    ipcRenderer.invoke("update-sales-order-status", id, status),
+
+  // Payroll API
+  getPayrolls: () => ipcRenderer.invoke("get-payrolls"),
+  getPayrollById: (id: string) => ipcRenderer.invoke("get-payroll-by-id", id),
+  createPayroll: (data: any) => ipcRenderer.invoke("create-payroll", data),
+  updatePayroll: (id: string, data: any) =>
+    ipcRenderer.invoke("update-payroll", id, data),
+  deletePayroll: (id: string) => ipcRenderer.invoke("delete-payroll", id),
+  updatePayrollStatus: (id: string, status: string) =>
+    ipcRenderer.invoke("update-payroll-status", id, status),
+
+  // Invoice API
+  getInvoices: () => ipcRenderer.invoke("get-invoices"),
+  getInvoiceById: (id: string) => ipcRenderer.invoke("get-invoice-by-id", id),
+  createInvoice: (data: any) => ipcRenderer.invoke("create-invoice", data),
+  updateInvoice: (id: string, data: any) =>
+    ipcRenderer.invoke("update-invoice", id, data),
+  deleteInvoice: (id: string) => ipcRenderer.invoke("delete-invoice", id),
+  updateInvoiceStatus: (id: string, status: string) =>
+    ipcRenderer.invoke("update-invoice-status", id, status),
+
+  // Payment API
+  getPayments: () => ipcRenderer.invoke("get-payments"),
+  getPaymentById: (id: string) => ipcRenderer.invoke("get-payment-by-id", id),
+  createPayment: (data: any) => ipcRenderer.invoke("create-payment", data),
+  updatePayment: (id: string, data: any) =>
+    ipcRenderer.invoke("update-payment", id, data),
+  deletePayment: (id: string) => ipcRenderer.invoke("delete-payment", id),
 });

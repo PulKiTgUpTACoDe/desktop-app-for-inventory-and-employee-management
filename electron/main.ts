@@ -6,6 +6,10 @@ import { inventoryHandlers } from './handlers/inventory_handler.js'
 import { supplierHandlers } from './handlers/supplier_handler.js'
 import { vendorHandlers } from './handlers/vendor_handler.js'
 import { purchaseOrderHandlers } from './handlers/purchaseOrder_handler.js'
+import { salesOrderHandlers } from './handlers/salesOrder_handler.js'
+import { payrollHandlers } from './handlers/payroll_handler.js'
+import { invoiceHandlers } from './handlers/invoice_handler.js'
+import { paymentHandlers } from './handlers/payment_handler.js'
 import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 
@@ -68,6 +72,10 @@ async function initApp() {
     supplierHandlers()
     vendorHandlers()
     purchaseOrderHandlers()
+    salesOrderHandlers()
+    payrollHandlers()
+    invoiceHandlers()
+    paymentHandlers()
     createWindow()
 
     app.on('activate', () => {
