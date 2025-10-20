@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import prisma from "../../src/lib/prisma.js";
+import { formatPrismaDeleteError } from "../utils/errorHandling.js";
 import { InvoiceFormValues } from "../../src/types/invoice.js";
 
 function safeResult<T>(data: T) {
@@ -187,7 +188,7 @@ export function invoiceHandlers() {
             await prisma.invoice.delete({ where: { id } });
             return { success: true, message: "Invoice deleted successfully." };
         } catch (error) {
-            return { success: false, error: String(error) };
+      return formatPrismaDeleteError('invoice', error);
         }
     });
 

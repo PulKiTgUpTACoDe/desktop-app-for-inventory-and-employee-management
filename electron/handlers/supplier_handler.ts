@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import prisma from "../../src/lib/prisma.js";
+import { formatPrismaDeleteError } from "../utils/errorHandling.js";
 import { SupplierFormValues } from "../../src/types/supplier.js";
 
 function safeResult<T>(data: T) {
@@ -85,7 +86,7 @@ export function supplierHandlers() {
             await prisma.supplier.delete({ where: { id } });
             return { success: true, message: "Supplier deleted successfully." };
         } catch (error) {
-            return { success: false, error: String(error) };
+      return formatPrismaDeleteError('supplier', error);
         }
     });
 }

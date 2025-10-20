@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import prisma from "../../src/lib/prisma.js";
+import { formatPrismaDeleteError } from "../utils/errorHandling.js";
 import { ProductFormValues, CategoryFormValues, BrandFormValues } from "../../src/types/inventory.js";
 
 function safeResult<T>(data: T) {
@@ -89,7 +90,7 @@ export function inventoryHandlers() {
             await prisma.product.delete({ where: { id } });
             return { success: true, message: "Product deleted successfully." };
         } catch (error) {
-            return { success: false, error: String(error) };
+      return formatPrismaDeleteError('product', error);
         }
     });
 
@@ -144,7 +145,7 @@ export function inventoryHandlers() {
             await prisma.productCategory.delete({ where: { id } });
             return { success: true, message: "Category deleted successfully." };
         } catch (error) {
-            return { success: false, error: String(error) };
+      return formatPrismaDeleteError('productCategory', error);
         }
     });
 
@@ -199,7 +200,7 @@ export function inventoryHandlers() {
             await prisma.productBrand.delete({ where: { id } });
             return { success: true, message: "Brand deleted successfully." };
         } catch (error) {
-            return { success: false, error: String(error) };
+      return formatPrismaDeleteError('productBrand', error);
         }
     });
 }
