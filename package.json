@@ -81,6 +81,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
     "@prisma/extension-accelerate": "^2.0.2",
+    "@radix-ui/react-toast": "^1.2.15",
     "axios": "^1.11.0",
     "better-sqlite3": "^12.4.1",
     "body-parser": "^2.2.0",

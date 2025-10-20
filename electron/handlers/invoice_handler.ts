@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import prisma from "../../src/lib/prisma.js";
+import { formatPrismaDeleteError } from "../utils/errorHandling.js";
 import { InvoiceFormValues } from "../../src/types/invoice.js";
 
 function safeResult<T>(data: T) {
@@ -83,7 +84,7 @@ export function invoiceHandlers() {
     ipcMain.handle("create-invoice", async (event, data: InvoiceFormValues) => {
         try {
             console.log("Creating invoice with data:", data);
-            
+
             // Check if sales order exists and get its details
             const salesOrder = await prisma.salesOrder.findUnique({
                 where: { id: data.salesOrderId },
@@ -102,9 +103,9 @@ export function invoiceHandlers() {
             });
 
             if (existingInvoice) {
-                return { 
-                    success: false, 
-                    error: "Invoice already exists for this sales order" 
+                return {
+                    success: false,
+                    error: "Invoice already exists for this sales order"
                 };
             }
 
@@ -187,7 +188,7 @@ export function invoiceHandlers() {
             await prisma.invoice.delete({ where: { id } });
             return { success: true, message: "Invoice deleted successfully." };
         } catch (error) {
-            return { success: false, error: String(error) };
+            return error
         }
     });
 

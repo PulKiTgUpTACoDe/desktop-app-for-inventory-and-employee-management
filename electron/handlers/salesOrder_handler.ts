@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import prisma from "../../src/lib/prisma.js";
+import { formatPrismaDeleteError } from "../utils/errorHandling.js";
 import { SalesOrderFormValues } from "../../src/types/salesOrder.js";
 
 function safeResult<T>(data: T) {
@@ -201,7 +202,7 @@ export function salesOrderHandlers() {
             await prisma.salesOrder.delete({ where: { id } });
             return { success: true, message: "Sales order deleted successfully." };
         } catch (error) {
-            return { success: false, error: String(error) };
+      return formatPrismaDeleteError('salesOrder', error);
         }
     });
 

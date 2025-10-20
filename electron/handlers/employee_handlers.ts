@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import prisma from "../../src/lib/prisma.js";
+import { formatPrismaDeleteError } from "../utils/errorHandling.js";
 import { EmployeeFormValues } from "../../src/types/employee.js";
 
 function safeResult<T>(data: T) {
@@ -70,7 +71,7 @@ export function employeeHandlers() {
       await prisma.employee.delete({ where: { id } });
       return { success: true, message: "Employee deleted successfully." };
     } catch (error) {
-      return { success: false, error: String(error) };
+      return formatPrismaDeleteError('employee', error);
     }
   });
 }

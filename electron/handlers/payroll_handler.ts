@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import prisma from "../../src/lib/prisma.js";
+import { formatPrismaDeleteError } from "../utils/errorHandling.js";
 import { PayrollFormValues } from "../../src/types/payroll.js";
 
 function safeResult<T>(data: T) {
@@ -161,7 +162,7 @@ export function payrollHandlers() {
             await prisma.payroll.delete({ where: { id } });
             return { success: true, message: "Payroll deleted successfully." };
         } catch (error) {
-            return { success: false, error: String(error) };
+      return formatPrismaDeleteError('payroll', String(error));
         }
     });
 

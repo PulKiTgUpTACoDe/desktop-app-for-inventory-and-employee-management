@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import prisma from "../../src/lib/prisma.js";
+import { formatPrismaDeleteError } from "../utils/errorHandling.js";
 import { PaymentFormValues } from "../../src/types/payment.js";
 
 function safeResult<T>(data: T) {
@@ -164,7 +165,7 @@ export function paymentHandlers() {
             await prisma.payment.delete({ where: { id } });
             return { success: true, message: "Payment deleted successfully." };
         } catch (error) {
-            return { success: false, error: String(error) };
+      return formatPrismaDeleteError('payment', error);
         }
     });
 }
