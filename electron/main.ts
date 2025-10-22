@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { fileURLToPath } from 'url'
 import { employeeHandlers } from './handlers/employee_handlers.js'
@@ -12,6 +12,7 @@ import { invoiceHandlers } from './handlers/invoice_handler.js'
 import { paymentHandlers } from './handlers/payment_handler.js'
 import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
+import Store from 'electron-store'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -21,6 +22,10 @@ const isDev = process.env.NODE_ENV === 'development'
 const dbPath = join(app.getPath('userData'), 'database', 'app_data.db')
 
 fs.mkdirSync(join(app.getPath('userData'), 'database'), { recursive: true })
+
+const store = new Store<{ isLoggedIn: boolean }>({
+  defaults: { isLoggedIn: false },
+});
 
 const prisma = new PrismaClient({
   datasources: {
@@ -61,7 +66,19 @@ function createWindow() {
   })
 }
 
-// ✅ Initialize handlers after Prisma is ready
+ipcMain.handle('get-login-state', () => {
+  return store.get('isLoggedIn', false);
+});
+
+ipcMain.on('user-login', () => {
+  store.set('isLoggedIn', true);
+});
+
+ipcMain.on('user-logout', () => {
+  store.set('isLoggedIn', false);
+});
+
+// Initialize handlers after Prisma is ready
 async function initApp() {
   try {
     await prisma.$connect()
@@ -99,5 +116,6 @@ app.on('window-all-closed', () => {
 
 // ✅ Gracefully disconnect Prisma on app quit
 app.on('before-quit', async () => {
+  store.set('isLoggedIn', false);
   await prisma.$disconnect()
 })

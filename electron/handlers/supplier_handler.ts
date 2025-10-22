@@ -86,7 +86,7 @@ export function supplierHandlers() {
             await prisma.supplier.delete({ where: { id } });
             return { success: true, message: "Supplier deleted successfully." };
         } catch (error) {
-      return formatPrismaDeleteError('supplier', error);
+      return formatPrismaDeleteError('supplier', String(error));
         }
     });
 }

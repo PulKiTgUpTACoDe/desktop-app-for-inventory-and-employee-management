@@ -3,6 +3,11 @@ import { contextBridge, ipcRenderer } from "electron";
 console.log("[preload] loaded");
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  //Login state
+  getLoginState: () => ipcRenderer.invoke('get-login-state'),
+  login: () => ipcRenderer.send('user-login'),
+  logout: () => ipcRenderer.send('user-logout'),
+
   // Employee API
   getEmployees: () => ipcRenderer.invoke("get-employees"),
   getEmployeeById: (id: string) => ipcRenderer.invoke("get-employee-by-id", id),

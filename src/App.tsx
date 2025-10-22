@@ -37,7 +37,7 @@ function App() {
             <Route path="invoices" element={<Invoices />} />
             <Route path="payments" element={<Payments />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="*" element={<Navigate to="dashboard" />} />
+            <Route path="" element={<Navigate to="dashboard" />} />
           </Route>
         )}
       </Routes>

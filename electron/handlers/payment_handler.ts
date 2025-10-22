@@ -165,7 +165,7 @@ export function paymentHandlers() {
             await prisma.payment.delete({ where: { id } });
             return { success: true, message: "Payment deleted successfully." };
         } catch (error) {
-      return formatPrismaDeleteError('payment', error);
+      return formatPrismaDeleteError('payment', String(error));
         }
     });
 }

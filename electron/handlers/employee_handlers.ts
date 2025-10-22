@@ -71,7 +71,7 @@ export function employeeHandlers() {
       await prisma.employee.delete({ where: { id } });
       return { success: true, message: "Employee deleted successfully." };
     } catch (error) {
-      return formatPrismaDeleteError('employee', error);
+      return formatPrismaDeleteError('employee', String(error));
     }
   });
 }

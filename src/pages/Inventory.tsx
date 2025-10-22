@@ -623,7 +623,7 @@ const Inventory: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Category Form - Only show when creating or editing */}
+                  {/* Category Form */}
                   {showCategoryForm && (
                     <div className="mb-6 bg-gray-50 p-4 rounded-lg">
                       <div className="flex justify-between items-center mb-4">
@@ -693,33 +693,65 @@ const Inventory: React.FC = () => {
                           <th className="p-3 text-left">Description</th>
                           <th className="p-3 text-left">Status</th>
                           <th className="p-3 text-left">Created</th>
+                          <th className="p-3 text-left">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {categories.map((category, i) => (
-                          <tr key={category.id || i} className="border-t">
-                            <td className="p-3">{category.name}</td>
-                            <td className="p-3">
-                              {category.description || "N/A"}
-                            </td>
-                            <td className="p-3">
-                              <span
-                                className={`px-2 py-1 rounded text-xs ${
-                                  category.isActive
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-red-100 text-red-800"
-                                }`}
-                              >
-                                {category.isActive ? "Active" : "Inactive"}
-                              </span>
-                            </td>
-                            <td className="p-3">
-                              {new Date(
-                                category.createdAt
-                              ).toLocaleDateString()}
+                        {categories.length === 0 ? (
+                          <tr>
+                            <td
+                              colSpan={5}
+                              className="p-3 text-center text-gray-500"
+                            >
+                              No categories found.
                             </td>
                           </tr>
-                        ))}
+                        ) : (
+                          categories.map((category, i) => (
+                            <tr key={category.id || i} className="border-t">
+                              <td className="p-3">{category.name}</td>
+                              <td className="p-3">
+                                {category.description || "N/A"}
+                              </td>
+                              <td className="p-3">
+                                <span
+                                  className={`px-2 py-1 rounded text-xs ${
+                                    category.isActive
+                                      ? "bg-green-100 text-green-800"
+                                      : "bg-red-100 text-red-800"
+                                  }`}
+                                >
+                                  {category.isActive ? "Active" : "Inactive"}
+                                </span>
+                              </td>
+                              <td className="p-3">
+                                {new Date(
+                                  category.createdAt
+                                ).toLocaleDateString()}
+                              </td>
+                              <td className="p-3">
+                                <div className="flex space-x-2">
+                                  <button
+                                    onClick={() => handleEditCategory(category)}
+                                    className="text-blue-600 hover:text-blue-800"
+                                    title="Edit Category"
+                                  >
+                                    ✏️
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      handleDeleteCategory(category)
+                                    }
+                                    className="text-red-600 hover:text-red-800"
+                                    title="Delete Category"
+                                  >
+                                    🗑️
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -729,47 +761,79 @@ const Inventory: React.FC = () => {
               {/* Brands Tab */}
               {activeTab === "brands" && (
                 <>
-                  {/* Brand Form */}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-4">
-                      Add New Brand
-                    </h3>
-                    <form
-                      className="bg-gray-50 p-4 rounded-lg flex flex-wrap gap-4"
-                      onSubmit={brandForm.handleSubmit(onBrandSubmit)}
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Brands</h3>
+                    <button
+                      onClick={() => {
+                        resetBrandForm();
+                        setShowBrandForm(true);
+                      }}
+                      className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
                     >
-                      <div>
-                        <input
-                          {...brandForm.register("name")}
-                          type="text"
-                          placeholder="Brand Name"
-                          className="border p-2 rounded w-48"
-                        />
-                        {brandForm.formState.errors.name && (
-                          <p className="text-red-600 text-sm">
-                            {brandForm.formState.errors.name.message}
-                          </p>
-                        )}
-                      </div>
-                      <div>
-                        <textarea
-                          {...brandForm.register("description")}
-                          placeholder="Description"
-                          className="border p-2 rounded w-64"
-                          rows={2}
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        disabled={brandForm.formState.isSubmitting}
-                        className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 disabled:opacity-50"
-                      >
-                        {brandForm.formState.isSubmitting
-                          ? "Adding..."
-                          : "Add Brand"}
-                      </button>
-                    </form>
+                      Add New Brand
+                    </button>
                   </div>
+
+                  {/* Brand Form */}
+                  {showBrandForm && (
+                    <div className="mb-6 bg-gray-50 p-4 rounded-lg">
+                      <div className="flex justify-between items-center mb-4">
+                        <h4 className="text-lg font-semibold text-gray-900">
+                          {isEditMode ? "Edit Brand" : "Add New Brand"}
+                        </h4>
+                        <button
+                          onClick={resetBrandForm}
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      <form
+                        className="flex flex-wrap gap-4"
+                        onSubmit={brandForm.handleSubmit(onBrandSubmit)}
+                      >
+                        <div>
+                          <input
+                            {...brandForm.register("name")}
+                            type="text"
+                            placeholder="Brand Name"
+                            className="border p-2 rounded w-48"
+                          />
+                          {brandForm.formState.errors.name && (
+                            <p className="text-red-600 text-sm">
+                              {brandForm.formState.errors.name.message}
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <textarea
+                            {...brandForm.register("description")}
+                            placeholder="Description"
+                            className="border p-2 rounded w-64"
+                            rows={2}
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          disabled={brandForm.formState.isSubmitting}
+                          className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 disabled:opacity-50"
+                        >
+                          {brandForm.formState.isSubmitting
+                            ? "Saving..."
+                            : isEditMode
+                            ? "Update Brand"
+                            : "Add Brand"}
+                        </button>
+                        <button
+                          type="button"
+                          className="px-4 py-2 rounded border hover:bg-gray-50"
+                          onClick={resetBrandForm}
+                        >
+                          Cancel
+                        </button>
+                      </form>
+                    </div>
+                  )}
 
                   {/* Brands Table */}
                   <div className="overflow-x-auto">
@@ -780,31 +844,61 @@ const Inventory: React.FC = () => {
                           <th className="p-3 text-left">Description</th>
                           <th className="p-3 text-left">Status</th>
                           <th className="p-3 text-left">Created</th>
+                          <th className="p-3 text-left">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {brands.map((brand, i) => (
-                          <tr key={brand.id || i} className="border-t">
-                            <td className="p-3">{brand.name}</td>
-                            <td className="p-3">
-                              {brand.description || "N/A"}
-                            </td>
-                            <td className="p-3">
-                              <span
-                                className={`px-2 py-1 rounded text-xs ${
-                                  brand.isActive
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-red-100 text-red-800"
-                                }`}
-                              >
-                                {brand.isActive ? "Active" : "Inactive"}
-                              </span>
-                            </td>
-                            <td className="p-3">
-                              {new Date(brand.createdAt).toLocaleDateString()}
+                        {brands.length === 0 ? (
+                          <tr>
+                            <td
+                              colSpan={5}
+                              className="p-3 text-center text-gray-500"
+                            >
+                              No brands found.
                             </td>
                           </tr>
-                        ))}
+                        ) : (
+                          brands.map((brand, i) => (
+                            <tr key={brand.id || i} className="border-t">
+                              <td className="p-3">{brand.name}</td>
+                              <td className="p-3">
+                                {brand.description || "N/A"}
+                              </td>
+                              <td className="p-3">
+                                <span
+                                  className={`px-2 py-1 rounded text-xs ${
+                                    brand.isActive
+                                      ? "bg-green-100 text-green-800"
+                                      : "bg-red-100 text-red-800"
+                                  }`}
+                                >
+                                  {brand.isActive ? "Active" : "Inactive"}
+                                </span>
+                              </td>
+                              <td className="p-3">
+                                {new Date(brand.createdAt).toLocaleDateString()}
+                              </td>
+                              <td className="p-3">
+                                <div className="flex space-x-2">
+                                  <button
+                                    onClick={() => handleEditBrand(brand)}
+                                    className="text-blue-600 hover:text-blue-800"
+                                    title="Edit Brand"
+                                  >
+                                    ✏️
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteBrand(brand)}
+                                    className="text-red-600 hover:text-red-800"
+                                    title="Delete Brand"
+                                  >
+                                    🗑️
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>

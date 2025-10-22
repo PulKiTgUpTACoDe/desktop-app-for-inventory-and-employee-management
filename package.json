@@ -8,13 +8,14 @@
     "dev": "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
     "dev:vite": "vite",
     "dev:electron": "wait-on tcp:3000 && cross-env NODE_ENV=development electron .",
-    "build": "npm run build:vite && npm run build:electron",
+    "build": "npm run clean && npm run build:vite && npm run build:electron",
     "build:vite": "vite build",
-    "build:electron": "tsc -p tsconfig.node.json && electron-builder",
+    "build:electron": "npm run clean && tsc -p tsconfig.node.json && electron-builder",
     "preview": "vite preview",
-    "dist": "npm run build && electron-builder --publish=never",
+    "dist": "npm run clean && npm run build && electron-builder --publish=never",
     "seed": "tsx src/lib/seed-data.ts",
-    "build:preload": "esbuild electron/preload.ts --bundle --platform=node --target=node18 --format=cjs --external:electron --outfile=dist-electron/electron/preload.js --sourcemap"
+    "build:preload": "esbuild electron/preload.ts --bundle --platform=node --target=node18 --format=cjs --external:electron --outfile=dist-electron/electron/preload.js --sourcemap",
+    "clean": "node clean.js"
   },
   "repository": {
     "type": "git",
@@ -89,6 +90,7 @@
     "clsx": "^2.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
+    "electron-store": "^11.0.2",
     "express": "^5.1.0",
     "lucide-react": "^0.300.0",
     "react": "^18.0.0",

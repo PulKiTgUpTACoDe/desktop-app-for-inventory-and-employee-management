@@ -202,7 +202,7 @@ export function salesOrderHandlers() {
             await prisma.salesOrder.delete({ where: { id } });
             return { success: true, message: "Sales order deleted successfully." };
         } catch (error) {
-      return formatPrismaDeleteError('salesOrder', error);
+      return formatPrismaDeleteError('salesOrder', String(error));
         }
     });
 

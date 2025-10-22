@@ -91,5 +91,11 @@ declare global {
             updatePayment: (id: string, data: Partial<PaymentFormValues>) => Promise<{ success: boolean; data?: any; error?: any }>;
             deletePayment: (id: string) => Promise<{ success: boolean; message?: string; error?: any }>;
         };
+
+        authAPI: {
+            getLoginState: () => Promise<boolean>;
+            login: () => void;
+            logout: () => void;
+          };
     }
 }
