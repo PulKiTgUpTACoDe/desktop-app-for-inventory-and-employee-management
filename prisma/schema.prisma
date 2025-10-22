@@ -537,7 +537,7 @@ model PurchaseOrderItem {
   updatedAt       DateTime @updatedAt
 
   // Relations
-  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
   product       Product       @relation(fields: [productId], references: [id])
 
   @@map("purchase_order_items")
@@ -578,7 +578,7 @@ model SalesOrderItem {
   updatedAt    DateTime @updatedAt
 
   // Relations
-  salesOrder SalesOrder @relation(fields: [salesOrderId], references: [id])
+  salesOrder SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Cascade)
   product    Product    @relation(fields: [productId], references: [id])
 
   @@map("sales_order_items")
