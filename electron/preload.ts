@@ -101,4 +101,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   updatePayment: (id: string, data: any) =>
     ipcRenderer.invoke("update-payment", id, data),
   deletePayment: (id: string) => ipcRenderer.invoke("delete-payment", id),
+
+  // Report API
+  generateReport: (params: { months: number }) => ipcRenderer.invoke("generate-report", params),
+  getReportPeriods: () => ipcRenderer.invoke("get-report-periods"),
 });

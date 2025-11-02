@@ -7,6 +7,7 @@ import { SalesOrderFormValues } from "./salesOrder";
 import { PayrollFormValues } from "./payroll";
 import { InvoiceFormValues } from "./invoice";
 import { PaymentFormValues } from "./payment";
+import { ReportParams, ReportResult, ReportPeriod } from "./report";
 
 // Declare the global electronAPI interface
 declare global {
@@ -90,12 +91,16 @@ declare global {
             createPayment: (data: PaymentFormValues) => Promise<{ success: boolean; data?: any; error?: any }>;
             updatePayment: (id: string, data: Partial<PaymentFormValues>) => Promise<{ success: boolean; data?: any; error?: any }>;
             deletePayment: (id: string) => Promise<{ success: boolean; message?: string; error?: any }>;
+
+            // Report API
+            generateReport: (params: ReportParams) => Promise<ReportResult>;
+            getReportPeriods: () => Promise<ReportPeriod[]>;
         };
 
         authAPI: {
             getLoginState: () => Promise<boolean>;
             login: () => void;
             logout: () => void;
-          };
+        };
     }
 }

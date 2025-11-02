@@ -8,140 +8,128 @@ datasource db {
 }
 
 model AdminUser {
-  id        String   @id @default(cuid())
-  username  String   @unique
-  password  String
-  email     String   @unique
-  fullName  String
-  role      String   @default("admin")
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  createdProducts         Product[]         @relation("ProductCreatedBy")
-  updatedProducts         Product[]         @relation("ProductUpdatedBy")
-  createdCategories       ProductCategory[] @relation("CategoryCreatedBy")
-  updatedCategories       ProductCategory[] @relation("CategoryUpdatedBy")
-  createdBrands           ProductBrand[]    @relation("BrandCreatedBy")
-  updatedBrands           ProductBrand[]    @relation("BrandUpdatedBy")
-  createdSuppliers        Supplier[]        @relation("SupplierCreatedBy")
-  updatedSuppliers        Supplier[]        @relation("SupplierUpdatedBy")
-  createdVendors          Vendor[]          @relation("VendorCreatedBy")
-  updatedVendors          Vendor[]          @relation("VendorUpdatedBy")
-  createdPurchaseOrders   PurchaseOrder[]   @relation("PurchaseOrderCreatedBy")
-  processedPurchaseOrders PurchaseOrder[]   @relation("PurchaseOrderProcessedBy")
-  createdSalesOrders      SalesOrder[]      @relation("SalesOrderCreatedBy")
-  processedSalesOrders    SalesOrder[]      @relation("SalesOrderProcessedBy")
-  createdEmployees        Employee[]        @relation("EmployeeCreatedBy")
+  id                      String            @id @default(cuid())
+  username                String            @unique
+  password                String
+  email                   String            @unique
+  fullName                String
+  role                    String            @default("admin")
+  isActive                Boolean           @default(true)
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
   updatedEmployees        Employee[]        @relation("EmployeeUpdatedBy")
-  createdPayrolls         Payroll[]         @relation("PayrollCreatedBy")
+  createdEmployees        Employee[]        @relation("EmployeeCreatedBy")
   processedPayrolls       Payroll[]         @relation("PayrollProcessedBy")
+  createdPayrolls         Payroll[]         @relation("PayrollCreatedBy")
+  updatedBrands           ProductBrand[]    @relation("BrandUpdatedBy")
+  createdBrands           ProductBrand[]    @relation("BrandCreatedBy")
+  updatedCategories       ProductCategory[] @relation("CategoryUpdatedBy")
+  createdCategories       ProductCategory[] @relation("CategoryCreatedBy")
+  updatedProducts         Product[]         @relation("ProductUpdatedBy")
+  createdProducts         Product[]         @relation("ProductCreatedBy")
+  processedPurchaseOrders PurchaseOrder[]   @relation("PurchaseOrderProcessedBy")
+  createdPurchaseOrders   PurchaseOrder[]   @relation("PurchaseOrderCreatedBy")
+  processedSalesOrders    SalesOrder[]      @relation("SalesOrderProcessedBy")
+  createdSalesOrders      SalesOrder[]      @relation("SalesOrderCreatedBy")
+  updatedSuppliers        Supplier[]        @relation("SupplierUpdatedBy")
+  createdSuppliers        Supplier[]        @relation("SupplierCreatedBy")
+  updatedVendors          Vendor[]          @relation("VendorUpdatedBy")
+  createdVendors          Vendor[]          @relation("VendorCreatedBy")
 
   @@map("admin_users")
 }
 
 model ProductCategory {
-  id          String   @id @default(cuid())
-  name        String   @unique
+  id          String    @id @default(cuid())
+  name        String    @unique
   description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   createdBy   String
   updatedBy   String
-
-  // Relations
-  products Product[]
-  creator  AdminUser @relation("CategoryCreatedBy", fields: [createdBy], references: [id])
-  updater  AdminUser @relation("CategoryUpdatedBy", fields: [updatedBy], references: [id])
+  updater     AdminUser @relation("CategoryUpdatedBy", fields: [updatedBy], references: [id])
+  creator     AdminUser @relation("CategoryCreatedBy", fields: [createdBy], references: [id])
+  products    Product[]
 
   @@map("product_categories")
 }
 
 model ProductBrand {
-  id          String   @id @default(cuid())
-  name        String   @unique
+  id          String    @id @default(cuid())
+  name        String    @unique
   description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   createdBy   String
   updatedBy   String
-
-  // Relations
-  products Product[]
-  creator  AdminUser @relation("BrandCreatedBy", fields: [createdBy], references: [id])
-  updater  AdminUser @relation("BrandUpdatedBy", fields: [updatedBy], references: [id])
+  updater     AdminUser @relation("BrandUpdatedBy", fields: [updatedBy], references: [id])
+  creator     AdminUser @relation("BrandCreatedBy", fields: [createdBy], references: [id])
+  products    Product[]
 
   @@map("product_brands")
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  sku         String   @unique
-  description String?
-  price       Decimal
-  costPrice   Decimal
-  categoryId  String
-  brandId     String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  createdBy   String
-  updatedBy   String
-
-  // Relations
-  category           ProductCategory     @relation(fields: [categoryId], references: [id])
+  id                 String              @id @default(cuid())
+  name               String
+  sku                String              @unique
+  description        String?
+  price              Decimal
+  costPrice          Decimal
+  categoryId         String
+  brandId            String
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  createdBy          String
+  updatedBy          String
+  updater            AdminUser           @relation("ProductUpdatedBy", fields: [updatedBy], references: [id])
+  creator            AdminUser           @relation("ProductCreatedBy", fields: [createdBy], references: [id])
   brand              ProductBrand        @relation(fields: [brandId], references: [id])
-  stock              Stock[]
+  category           ProductCategory     @relation(fields: [categoryId], references: [id])
   purchaseOrderItems PurchaseOrderItem[]
   salesOrderItems    SalesOrderItem[]
-  creator            AdminUser           @relation("ProductCreatedBy", fields: [createdBy], references: [id])
-  updater            AdminUser           @relation("ProductUpdatedBy", fields: [updatedBy], references: [id])
+  stock              Stock[]
 
   @@map("products")
 }
 
 model Supplier {
-  id            String   @id @default(cuid())
-  name          String
-  email         String?
-  phone         String?
-  address       String?
-  contactPerson String?
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  createdBy     String
-  updatedBy     String
-
-  // Relations
+  id             String          @id @default(cuid())
+  name           String
+  email          String?
+  phone          String?
+  address        String?
+  contactPerson  String?
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  createdBy      String
+  updatedBy      String
   purchaseOrders PurchaseOrder[]
-  creator        AdminUser       @relation("SupplierCreatedBy", fields: [createdBy], references: [id])
   updater        AdminUser       @relation("SupplierUpdatedBy", fields: [updatedBy], references: [id])
+  creator        AdminUser       @relation("SupplierCreatedBy", fields: [createdBy], references: [id])
 
   @@map("suppliers")
 }
 
 model Vendor {
-  id            String   @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String
   email         String?
   phone         String?
   address       String?
   contactPerson String?
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
   createdBy     String
   updatedBy     String
-
-  // Relations
-  salesOrders SalesOrder[]
-  creator     AdminUser    @relation("VendorCreatedBy", fields: [createdBy], references: [id])
-  updater     AdminUser    @relation("VendorUpdatedBy", fields: [updatedBy], references: [id])
+  salesOrders   SalesOrder[]
+  updater       AdminUser    @relation("VendorUpdatedBy", fields: [updatedBy], references: [id])
+  creator       AdminUser    @relation("VendorCreatedBy", fields: [createdBy], references: [id])
 
   @@map("vendors")
 }
@@ -153,108 +141,96 @@ model Stock {
   location  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // Relations
-  product Product @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 
   @@map("stock")
 }
 
 model PurchaseOrder {
-  id               String    @id @default(cuid())
-  orderNumber      String    @unique
+  id               String              @id @default(cuid())
+  orderNumber      String              @unique
   supplierId       String
   orderDate        DateTime
   expectedDelivery DateTime?
-  status           String    @default("pending")
+  status           String              @default("pending")
   totalAmount      Decimal
   notes            String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
   createdBy        String
   processedBy      String?
-
-  // Relations
-  supplier  Supplier            @relation(fields: [supplierId], references: [id])
-  items     PurchaseOrderItem[]
-  creator   AdminUser           @relation("PurchaseOrderCreatedBy", fields: [createdBy], references: [id])
-  processor AdminUser?          @relation("PurchaseOrderProcessedBy", fields: [processedBy], references: [id])
+  items            PurchaseOrderItem[]
+  processor        AdminUser?          @relation("PurchaseOrderProcessedBy", fields: [processedBy], references: [id])
+  creator          AdminUser           @relation("PurchaseOrderCreatedBy", fields: [createdBy], references: [id])
+  supplier         Supplier            @relation(fields: [supplierId], references: [id])
 
   @@map("purchase_orders")
 }
 
 model PurchaseOrderItem {
-  id              String   @id @default(cuid())
+  id              String        @id @default(cuid())
   purchaseOrderId String
   productId       String
   quantity        Int
   unitPrice       Decimal
   totalPrice      Decimal
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  // Relations
-  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
-  product       Product       @relation(fields: [productId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  product         Product       @relation(fields: [productId], references: [id])
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
 
   @@map("purchase_order_items")
 }
 
 model SalesOrder {
-  id               String    @id @default(cuid())
-  orderNumber      String    @unique
+  id               String           @id @default(cuid())
+  orderNumber      String           @unique
   vendorId         String
   orderDate        DateTime
   expectedDelivery DateTime?
-  status           String    @default("pending")
+  status           String           @default("pending")
   totalAmount      Decimal
   notes            String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
   createdBy        String
   processedBy      String?
-
-  // Relations
-  vendor    Vendor           @relation(fields: [vendorId], references: [id])
-  items     SalesOrderItem[]
-  invoice   Invoice?
-  creator   AdminUser        @relation("SalesOrderCreatedBy", fields: [createdBy], references: [id])
-  processor AdminUser?       @relation("SalesOrderProcessedBy", fields: [processedBy], references: [id])
+  invoice          Invoice?
+  items            SalesOrderItem[]
+  processor        AdminUser?       @relation("SalesOrderProcessedBy", fields: [processedBy], references: [id])
+  creator          AdminUser        @relation("SalesOrderCreatedBy", fields: [createdBy], references: [id])
+  vendor           Vendor           @relation(fields: [vendorId], references: [id])
 
   @@map("sales_orders")
 }
 
 model SalesOrderItem {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   salesOrderId String
   productId    String
   quantity     Int
   unitPrice    Decimal
   totalPrice   Decimal
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  // Relations
-  salesOrder SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Cascade)
-  product    Product    @relation(fields: [productId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  product      Product    @relation(fields: [productId], references: [id])
+  salesOrder   SalesOrder @relation(fields: [salesOrderId], references: [id], onDelete: Cascade)
 
   @@map("sales_order_items")
 }
 
 model Invoice {
-  id            String   @id @default(cuid())
-  invoiceNumber String   @unique
-  salesOrderId  String   @unique
+  id            String     @id @default(cuid())
+  invoiceNumber String     @unique
+  salesOrderId  String     @unique
   invoiceDate   DateTime
   dueDate       DateTime
   totalAmount   Decimal
-  status        String   @default("pending")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  // Relations
-  salesOrder SalesOrder @relation(fields: [salesOrderId], references: [id])
-  payments   Payment[]
+  status        String     @default("pending")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  salesOrder    SalesOrder @relation(fields: [salesOrderId], references: [id])
+  payments      Payment[]
 
   @@map("invoices")
 }
@@ -269,41 +245,37 @@ model Payment {
   notes         String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-
-  // Relations
-  invoice Invoice @relation(fields: [invoiceId], references: [id])
+  invoice       Invoice  @relation(fields: [invoiceId], references: [id])
 
   @@map("payments")
 }
 
 model Employee {
-  id         String   @id @default(cuid())
-  employeeId String   @unique @default(cuid())
+  id         String    @id @default(cuid())
+  employeeId String    @unique @default(cuid())
   firstName  String
   lastName   String
-  email      String   @unique
+  email      String    @unique
   phone      String?
   address    String?
   position   String
   department String
   hireDate   DateTime
   salary     Decimal
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   createdBy  String
   updatedBy  String
-
-  // Relations
-  payrolls Payroll[]
-  creator  AdminUser @relation("EmployeeCreatedBy", fields: [createdBy], references: [id])
-  updater  AdminUser @relation("EmployeeUpdatedBy", fields: [updatedBy], references: [id])
+  updater    AdminUser @relation("EmployeeUpdatedBy", fields: [updatedBy], references: [id])
+  creator    AdminUser @relation("EmployeeCreatedBy", fields: [createdBy], references: [id])
+  payrolls   Payroll[]
 
   @@map("employees")
 }
 
 model Payroll {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   employeeId  String
   month       Int
   year        Int
@@ -311,17 +283,15 @@ model Payroll {
   allowances  Decimal
   deductions  Decimal
   netSalary   Decimal
-  status      String   @default("pending")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status      String     @default("pending")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   createdBy   String
   processedBy String?
-
-  // Relations
-  employee  Employee   @relation(fields: [employeeId], references: [id])
-  payslip   Payslip?
-  creator   AdminUser  @relation("PayrollCreatedBy", fields: [createdBy], references: [id])
-  processor AdminUser? @relation("PayrollProcessedBy", fields: [processedBy], references: [id])
+  processor   AdminUser? @relation("PayrollProcessedBy", fields: [processedBy], references: [id])
+  creator     AdminUser  @relation("PayrollCreatedBy", fields: [createdBy], references: [id])
+  employee    Employee   @relation(fields: [employeeId], references: [id])
+  payslip     Payslip?
 
   @@unique([employeeId, month, year])
   @@map("payrolls")
@@ -334,9 +304,7 @@ model Payslip {
   issueDate     DateTime
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-
-  // Relations
-  payroll Payroll @relation(fields: [payrollId], references: [id])
+  payroll       Payroll  @relation(fields: [payrollId], references: [id])
 
   @@map("payslips")
 }

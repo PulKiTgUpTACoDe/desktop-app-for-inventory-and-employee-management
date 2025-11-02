@@ -1,44 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { 
-  Package, 
-  ShoppingCart, 
-  Users, 
+import React, { useEffect, useState } from "react";
+import {
+  Package,
+  ShoppingCart,
+  Users,
   AlertTriangle,
   Box,
   Clock,
-  FileDown
-} from 'lucide-react';
-import { analyticsService, DashboardMetrics } from '../services/analyticsService';
-import { SalesTrendChart } from '../components/charts/SalesTrendChart';
-import { TopSellingProductsChart } from '../components/charts/TopSellingProductsChart';
-import { InventoryByCategoryChart } from '../components/charts/InventoryByCategoryChart';
-import { SalesByVendorChart } from '../components/charts/SalesByVendorChart';
-import { MetricCard } from '../components/charts/MetricCard';
+  FileDown,
+} from "lucide-react";
+import {
+  analyticsService,
+  DashboardMetrics,
+} from "../services/analyticsService";
+import ReportModal from "../components/ReportModal";
+import { SalesTrendChart } from "../components/charts/SalesTrendChart";
+import { TopSellingProductsChart } from "../components/charts/TopSellingProductsChart";
+import { InventoryByCategoryChart } from "../components/charts/InventoryByCategoryChart";
+import { SalesByVendorChart } from "../components/charts/SalesByVendorChart";
+import { MetricCard } from "../components/charts/MetricCard";
 
 const Dashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   // Quick Actions
   const quickActions = [
-    { 
-      icon: <ShoppingCart className="h-5 w-5 text-gray-600 mr-2" />, 
-      label: 'New Sale',
-      onClick: () => {}
+    {
+      icon: <ShoppingCart className="h-5 w-5 text-gray-600 mr-2" />,
+      label: "New Sale",
+      onClick: () => {},
     },
-    { 
-      icon: <Box className="h-5 w-5 text-gray-600 mr-2" />, 
-      label: 'Add Product',
-      onClick: () => {}
+    {
+      icon: <Box className="h-5 w-5 text-gray-600 mr-2" />,
+      label: "Add Product",
+      onClick: () => {},
     },
-    { 
-      icon: <FileDown className="h-5 w-5 text-gray-600 mr-2" />, 
-      label: 'Generate Report',
-      onClick: () => {}
+    {
+      icon: <FileDown className="h-5 w-5 text-gray-600 mr-2" />,
+      label: "Generate Report",
+      onClick: () => setIsReportModalOpen(true),
     },
-    { 
-      icon: <Clock className="h-5 w-5 text-gray-600 mr-2" />, 
-      label: 'Recent Activity',
-      onClick: () => {}
+    {
+      icon: <Clock className="h-5 w-5 text-gray-600 mr-2" />,
+      label: "Recent Activity",
+      onClick: () => {},
     },
   ] as const;
   const [loading, setLoading] = useState(true);
@@ -51,8 +56,8 @@ const Dashboard: React.FC = () => {
         const data = await analyticsService.getDashboardMetrics();
         setMetrics(data);
       } catch (err) {
-        console.error('Failed to fetch dashboard data:', err);
-        setError('Failed to load dashboard data. Please try again later.');
+        console.error("Failed to fetch dashboard data:", err);
+        setError("Failed to load dashboard data. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -79,7 +84,9 @@ const Dashboard: React.FC = () => {
           <div className="text-red-500 mb-4">
             <AlertTriangle className="h-12 w-12 mx-auto" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Error Loading Dashboard</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            Error Loading Dashboard
+          </h3>
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
@@ -96,7 +103,9 @@ const Dashboard: React.FC = () => {
     <div className="flex-1 overflow-y-auto p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Dashboard Overview
+          </h1>
           <p className="mt-1 text-sm text-gray-500">
             Welcome back! Here's what's happening with your business today.
           </p>
@@ -111,7 +120,7 @@ const Dashboard: React.FC = () => {
             icon={<Package className="h-6 w-6 text-blue-600" />}
             color="bg-blue-100"
           />
-          
+
           <MetricCard
             title="Low Stock Items"
             value={metrics?.lowStockItems || 0}
@@ -119,7 +128,7 @@ const Dashboard: React.FC = () => {
             icon={<AlertTriangle className="h-6 w-6 text-yellow-600" />}
             color="bg-yellow-100"
           />
-          
+
           <MetricCard
             title="Monthly Sales"
             value={`₹${(metrics?.totalSales || 0).toLocaleString()}`}
@@ -127,7 +136,7 @@ const Dashboard: React.FC = () => {
             icon={<ShoppingCart className="h-6 w-6 text-green-600" />}
             color="bg-green-100"
           />
-          
+
           <MetricCard
             title="Active Employees"
             value={metrics?.activeEmployees || 0}
@@ -150,21 +159,38 @@ const Dashboard: React.FC = () => {
 
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Quick Actions
+          </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {quickActions.map((action: { icon: React.ReactNode; label: string; onClick: () => void }, index: number) => (
-              <button
-                key={index}
-                className="flex items-center justify-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                onClick={action.onClick}
-              >
-                {action.icon}
-                <span>{action.label}</span>
-              </button>
-            ))}
+            {quickActions.map(
+              (
+                action: {
+                  icon: React.ReactNode;
+                  label: string;
+                  onClick: () => void;
+                },
+                index: number
+              ) => (
+                <button
+                  key={index}
+                  className="flex items-center justify-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  onClick={action.onClick}
+                >
+                  {action.icon}
+                  <span>{action.label}</span>
+                </button>
+              )
+            )}
           </div>
         </div>
       </div>
+
+      {/* Report Generation Modal */}
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+      />
     </div>
   );
 };

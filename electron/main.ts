@@ -10,6 +10,8 @@ import { salesOrderHandlers } from './handlers/salesOrder_handler.js'
 import { payrollHandlers } from './handlers/payroll_handler.js'
 import { invoiceHandlers } from './handlers/invoice_handler.js'
 import { paymentHandlers } from './handlers/payment_handler.js'
+import { reportHandlers } from './handlers/reportHandlers.js'
+import { ReportService } from './services/reportService.js'
 import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 import Store from 'electron-store'
@@ -93,6 +95,15 @@ async function initApp() {
     payrollHandlers()
     invoiceHandlers()
     paymentHandlers()
+
+    // Initialize report handlers
+    try {
+      const reportService = new ReportService(prisma)
+      reportHandlers({ reportService })
+    } catch (error) {
+      console.error('❌ Failed to register report handlers:', error)
+    }
+
     createWindow()
 
     app.on('activate', () => {
@@ -101,7 +112,6 @@ async function initApp() {
       }
     })
   } catch (error) {
-    console.error('❌ Failed to initialize app:', error)
     app.quit()
   }
 }
