@@ -20,6 +20,6 @@
     "src/types/*.ts",
   ],
   "exclude": [
-    "src/services/**/*"
+    "src/services/**/*",
   ]
 }
