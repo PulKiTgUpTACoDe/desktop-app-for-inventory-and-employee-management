@@ -542,18 +542,20 @@ const PurchaseOrders: React.FC = () => {
         </main>
       </div>
       {/* Confirmation Dialog */}
-      <ConfirmationDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={confirmDelete}
-        title="Delete Purchase Order"
-        message={`Are you sure you want to delete ${
-          orderToDelete?.orderNumber || "this order"
-        }? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        type="danger"
-      />
+      {showDeleteDialog && (
+        <ConfirmationDialog
+          isOpen={showDeleteDialog}
+          onClose={() => setShowDeleteDialog(false)}
+          onConfirm={confirmDelete}
+          title="Delete Purchase Order"
+          message={`Are you sure you want to delete ${
+            orderToDelete?.orderNumber || "this order"
+          }? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          type="danger"
+        />
+      )}
     </div>
   );
 };

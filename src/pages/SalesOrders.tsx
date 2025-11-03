@@ -537,7 +537,8 @@ const SalesOrders: React.FC = () => {
           </div>
         </main>
         {/* Confirmation Dialog */}
-        <ConfirmationDialog
+        {showDeleteDialog && (
+          <ConfirmationDialog
           isOpen={showDeleteDialog}
           onClose={() => setShowDeleteDialog(false)}
           onConfirm={confirmDelete}
@@ -549,6 +550,7 @@ const SalesOrders: React.FC = () => {
           cancelText="Cancel"
           type="danger"
         />
+        )}
       </div>
     </div>
   );

@@ -498,18 +498,20 @@ const Payments: React.FC = () => {
           </div>
         </main>
         {/* Confirmation Dialog */}
-        <ConfirmationDialog
-          isOpen={showDeleteDialog}
-          onClose={() => setShowDeleteDialog(false)}
-          onConfirm={confirmDelete}
-          title="Delete Payment"
-          message={`Are you sure you want to delete payment for ${
-            paymentToDelete?.invoice?.invoiceNumber || "this invoice"
-          }? This action cannot be undone.`}
-          confirmText="Delete"
-          cancelText="Cancel"
-          type="danger"
-        />
+        {showDeleteDialog && (
+          <ConfirmationDialog
+            isOpen={showDeleteDialog}
+            onClose={() => setShowDeleteDialog(false)}
+            onConfirm={confirmDelete}
+            title="Delete Payment"
+            message={`Are you sure you want to delete payment for ${
+              paymentToDelete?.invoice?.invoiceNumber || "this invoice"
+            }? This action cannot be undone.`}
+            confirmText="Delete"
+            cancelText="Cancel"
+            type="danger"
+          />
+        )}
       </div>
     </div>
   );

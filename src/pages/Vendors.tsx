@@ -323,16 +323,18 @@ const Vendors: React.FC = () => {
       </div>
 
       {/* Confirmation Dialog */}
-      <ConfirmationDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={confirmDelete}
-        title="Delete Vendor"
-        message={`Are you sure you want to delete ${vendorToDelete?.name}? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        type="danger"
-      />
+      {showDeleteDialog && (
+        <ConfirmationDialog
+          isOpen={showDeleteDialog}
+          onClose={() => setShowDeleteDialog(false)}
+          onConfirm={confirmDelete}
+          title="Delete Vendor"
+          message={`Are you sure you want to delete ${vendorToDelete?.name}? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          type="danger"
+        />
+      )}
     </div>
   );
 };

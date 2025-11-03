@@ -910,18 +910,20 @@ const Inventory: React.FC = () => {
       </div>
 
       {/* Confirmation Dialog */}
-      <ConfirmationDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={confirmDelete}
-        title={`Delete ${
-          deleteType.charAt(0).toUpperCase() + deleteType.slice(1)
-        }`}
-        message={`Are you sure you want to delete this ${deleteType}? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        type="danger"
-      />
+      {showDeleteDialog && (
+        <ConfirmationDialog
+          isOpen={showDeleteDialog}
+          onClose={() => setShowDeleteDialog(false)}
+          onConfirm={confirmDelete}
+          title={`Delete ${
+            deleteType.charAt(0).toUpperCase() + deleteType.slice(1)
+          }`}
+          message={`Are you sure you want to delete this ${deleteType}? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          type="danger"
+        />
+      )}
     </div>
   );
 };

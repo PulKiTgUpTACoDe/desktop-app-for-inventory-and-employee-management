@@ -485,18 +485,20 @@ const Payrolls: React.FC = () => {
           </div>
         </main>
         {/* Confirmation Dialog */}
-        <ConfirmationDialog
-          isOpen={showDeleteDialog}
-          onClose={() => setShowDeleteDialog(false)}
-          onConfirm={confirmDelete}
-          title="Delete Payroll"
-          message={`Are you sure you want to delete payroll for ${
-            payrollToDelete?.employee?.firstName || "this employee"
-          }? This action cannot be undone.`}
-          confirmText="Delete"
-          cancelText="Cancel"
-          type="danger"
-        />
+        {showDeleteDialog && (
+          <ConfirmationDialog
+            isOpen={showDeleteDialog}
+            onClose={() => setShowDeleteDialog(false)}
+            onConfirm={confirmDelete}
+            title="Delete Payroll"
+            message={`Are you sure you want to delete payroll for ${
+              payrollToDelete?.employee?.firstName || "this employee"
+            }? This action cannot be undone.`}
+            confirmText="Delete"
+            cancelText="Cancel"
+            type="danger"
+          />
+        )}
       </div>
     </div>
   );

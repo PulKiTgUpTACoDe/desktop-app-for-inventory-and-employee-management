@@ -143,8 +143,8 @@ const Employees: React.FC = () => {
         await fetchEmployees();
       } else {
         console.error("❌ Error deleting employee:", response.error);
-        let err = formatPrismaDeleteError(`employee`, String(response.error))
-        alert(err)
+        let err = formatPrismaDeleteError(`employee`, String(response.error));
+        alert(err);
       }
     } catch (err: any) {
       console.error("❌ Error deleting employee:", err);
@@ -443,16 +443,18 @@ const Employees: React.FC = () => {
       </div>
 
       {/* Confirmation Dialogs */}
-      <ConfirmationDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onConfirm={confirmDelete}
-        title="Delete Employee"
-        message={`Are you sure you want to delete ${employeeToDelete?.firstName} ${employeeToDelete?.lastName}? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        type="danger"
-      />
+      {showDeleteDialog && (
+        <ConfirmationDialog
+          isOpen={showDeleteDialog}
+          onClose={() => setShowDeleteDialog(false)}
+          onConfirm={confirmDelete}
+          title="Delete Employee"
+          message={`Are you sure you want to delete ${employeeToDelete?.firstName} ${employeeToDelete?.lastName}? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          type="danger"
+        />
+      )}
     </div>
   );
 };
