@@ -11,7 +11,6 @@ import { payrollHandlers } from './handlers/payroll_handler.js'
 import { invoiceHandlers } from './handlers/invoice_handler.js'
 import { paymentHandlers } from './handlers/payment_handler.js'
 import { reportHandlers } from './handlers/reportHandlers.js'
-import { ReportService } from './services/reportService.js'
 import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 import Store from 'electron-store'
@@ -27,7 +26,7 @@ fs.mkdirSync(join(app.getPath('userData'), 'database'), { recursive: true })
 
 const store = new Store<{ isLoggedIn: boolean }>({
   defaults: { isLoggedIn: false },
-});
+})
 
 const prisma = new PrismaClient({
   datasources: {
@@ -69,18 +68,17 @@ function createWindow() {
 }
 
 ipcMain.handle('get-login-state', () => {
-  return store.get('isLoggedIn', false);
-});
+  return store.get('isLoggedIn', false)
+})
 
 ipcMain.on('user-login', () => {
-  store.set('isLoggedIn', true);
-});
+  store.set('isLoggedIn', true)
+})
 
 ipcMain.on('user-logout', () => {
-  store.set('isLoggedIn', false);
-});
+  store.set('isLoggedIn', false)
+})
 
-// Initialize handlers after Prisma is ready
 async function initApp() {
   try {
     await prisma.$connect()
@@ -95,14 +93,7 @@ async function initApp() {
     payrollHandlers()
     invoiceHandlers()
     paymentHandlers()
-
-    // Initialize report handlers
-    try {
-      const reportService = new ReportService(prisma)
-      reportHandlers({ reportService })
-    } catch (error) {
-      console.error('❌ Failed to register report handlers:', error)
-    }
+    reportHandlers() 
 
     createWindow()
 
@@ -112,6 +103,7 @@ async function initApp() {
       }
     })
   } catch (error) {
+    console.error('❌ Error initializing app:', error)
     app.quit()
   }
 }
@@ -124,8 +116,7 @@ app.on('window-all-closed', () => {
   }
 })
 
-// ✅ Gracefully disconnect Prisma on app quit
 app.on('before-quit', async () => {
-  store.set('isLoggedIn', false);
+  store.set('isLoggedIn', false)
   await prisma.$disconnect()
 })

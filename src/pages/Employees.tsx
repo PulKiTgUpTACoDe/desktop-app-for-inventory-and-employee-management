@@ -236,8 +236,8 @@ const Employees: React.FC = () => {
                     </div>
                     <div>
                       <input
-                        {...register("phone")}
-                        type="text"
+                        {...register("phone", { pattern: /^[0-9]{10}$/ })}
+                        type="number"
                         placeholder="Phone"
                         className="border p-2 rounded w-full"
                       />
