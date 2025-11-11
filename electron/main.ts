@@ -20,7 +20,9 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 const isDev = process.env.NODE_ENV === 'development'
 
-const dbPath = join(app.getPath('userData'), 'database', 'app_data.db')
+const dbPath = isDev
+  ? join(app.getPath('userData'), 'database', 'app_data.db')
+  : join(process.resourcesPath, 'prisma', 'dev.db')
 
 fs.mkdirSync(join(app.getPath('userData'), 'database'), { recursive: true })
 
