@@ -69,14 +69,14 @@ export interface DashboardMetrics {
   activeEmployees: number;
   pendingPurchaseOrders: number;
   pendingSalesOrders: number;
-  
+
   // Percentage changes
   totalProductsChange: number;
   lowStockItemsChange: number;
   totalSalesChange: number;
   totalPurchasesChange: number;
   activeEmployeesChange: number;
-  
+
   // Chart data
   salesTrend: { month: string; sales: number }[];
   topSellingProducts: { name: string; quantity: number }[];
@@ -149,8 +149,8 @@ export const analyticsService = {
 
       // Helper function to filter and sum by month and year
       const getMonthlyTotal = <T extends { orderDate: string; totalAmount: number }>(
-        items: T[], 
-        month: number, 
+        items: T[],
+        month: number,
         year: number
       ): number => {
         return items
@@ -158,7 +158,12 @@ export const analyticsService = {
             const date = new Date(item.orderDate);
             return date.getMonth() === month && date.getFullYear() === year;
           })
-          .reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+          .reduce((sum, order) => {
+            const amount = typeof order.totalAmount === 'string'
+              ? parseFloat(order.totalAmount) || 0
+              : order.totalAmount;
+            return sum + amount;
+          }, 0);
       };
 
       // Calculate current month metrics
@@ -174,33 +179,36 @@ export const analyticsService = {
 
       // Calculate percentage changes
       const calculatePercentageChange = (current: number, previous: number): number => {
-        if (previous === 0) return current > 0 ? 100 : 0;
-        return parseFloat((((current - previous) / Math.abs(previous)) * 100).toFixed(1));
+        const currentNum = Number(current) || 0;
+        const previousNum = Number(previous) || 0;
+
+        if (previousNum === 0) return currentNum > 0 ? 100 : 0;
+        return parseFloat((((currentNum - previousNum) / Math.abs(previousNum)) * 100).toFixed(1));
       };
 
       // Get previous month's data for all metrics using actual timestamps
       const prevMonthActiveEmployees = employees.filter(e => {
         const hireDate = new Date(e.hireDate);
-        return e.isActive && 
-               hireDate < new Date(currentYear, currentMonth, 1);
+        return e.isActive &&
+          hireDate < new Date(currentYear, currentMonth, 1);
       }).length;
 
       // Calculate previous month's metrics
       const prevMonthProductCount = products.filter(p => {
         const createdDate = new Date(p.createdAt);
-        return createdDate < new Date(prevMonthYear, prevMonth + 1, 1) && 
-               createdDate >= new Date(prevMonthYear, prevMonth, 1);
+        return createdDate < new Date(prevMonthYear, prevMonth + 1, 1) &&
+          createdDate >= new Date(prevMonthYear, prevMonth, 1);
       }).length;
-      
+
       // Get previous month's sales and purchases
       const prevMonthSalesTotal = getMonthlyTotal(salesOrders, prevMonth, prevMonthYear);
       const prevMonthPurchasesTotal = getMonthlyTotal(purchaseOrders, prevMonth, prevMonthYear);
-      
+
       // Get previous month's low stock items
       const prevMonthLowStock = products.filter(p => {
         const createdDate = new Date(p.createdAt);
-        return createdDate < new Date(currentYear, currentMonth, 1) && 
-               p.stock && p.stock.quantity < 10;
+        return createdDate < new Date(currentYear, currentMonth, 1) &&
+          p.stock && p.stock.quantity < 10;
       }).length;
 
       // Calculate percentage changes
@@ -279,14 +287,14 @@ export const analyticsService = {
         activeEmployees,
         pendingPurchaseOrders,
         pendingSalesOrders,
-        
+
         // Percentage changes
         totalProductsChange,
         lowStockItemsChange,
         totalSalesChange,
         totalPurchasesChange,
         activeEmployeesChange,
-        
+
         // Chart data
         salesTrend,
         topSellingProducts,

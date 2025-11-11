@@ -45,7 +45,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: join(__dirname, 'preload.js')
+      preload: join(__dirname, 'preload.js'),
+      sandbox: true
     },
     icon: join(__dirname, '../assets/icon.png'),
     show: false
