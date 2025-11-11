@@ -79,11 +79,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </button>
           </div>
           
-          <div className="text-center text-sm text-gray-600">
-            <p>Demo Credentials:</p>
-            <p>Username: admin</p>
-            <p>Password: admin123</p>
-          </div>
         </form>
       </div>
     </div>
