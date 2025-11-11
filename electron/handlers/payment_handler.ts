@@ -85,7 +85,7 @@ export function paymentHandlers() {
             if (data.amount > remainingAmount) {
                 return { 
                     success: false, 
-                    error: `Payment amount ($${data.amount.toFixed(2)}) exceeds remaining amount ($${remainingAmount.toFixed(2)})` 
+                    error: `Payment amount (₹${data.amount.toFixed(2)}) exceeds remaining amount (₹${remainingAmount.toFixed(2)})` 
                 };
             }
 

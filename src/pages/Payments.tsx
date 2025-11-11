@@ -362,7 +362,7 @@ const Payments: React.FC = () => {
                                 <span className="font-medium">
                                   Total Amount:
                                 </span>{" "}
-                                $
+                                ₹
                                 {Number(selectedInvoice.totalAmount).toFixed(2)}
                               </div>
                             </div>

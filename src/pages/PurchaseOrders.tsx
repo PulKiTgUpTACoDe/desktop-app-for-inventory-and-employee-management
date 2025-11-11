@@ -354,7 +354,7 @@ const PurchaseOrders: React.FC = () => {
 
                               <div className="flex items-center gap-2">
                                 <div className="text-sm text-gray-600 font-medium">
-                                  Total: $
+                                  Total: ₹
                                   {(
                                     (itemsWatch[index]?.quantity || 0) *
                                     (itemsWatch[index]?.unitPrice || 0)
@@ -398,7 +398,7 @@ const PurchaseOrders: React.FC = () => {
                             Total Amount:
                           </div>
                           <div className="text-2xl font-bold text-blue-600">
-                            ${total.toFixed(2)}
+                            ₹{total.toFixed(2)}
                           </div>
                         </div>
 

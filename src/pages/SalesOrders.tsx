@@ -391,7 +391,7 @@ const SalesOrders: React.FC = () => {
                             Total Amount:
                           </div>
                           <div className="text-2xl font-bold text-blue-600">
-                            ${total.toFixed(2)}
+                            ₹{total.toFixed(2)}
                           </div>
                         </div>
 

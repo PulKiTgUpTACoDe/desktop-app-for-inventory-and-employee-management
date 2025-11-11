@@ -331,7 +331,7 @@ const Invoices: React.FC = () => {
                             Total Amount:
                           </div>
                           <div className="text-2xl font-bold text-green-600">
-                            $
+                            ₹
                             {selectedSalesOrder
                               ? Number(selectedSalesOrder.totalAmount).toFixed(
                                   2
