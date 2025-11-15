@@ -52,7 +52,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ isOpen, onClose }) => {
         if (result.success) {
           setSuccess(
             `Report generated successfully! File saved to: ${
-              result.data?.filePath || "Documents/Inventory Reports"
+              result.data?.filePath
             }`
           );
 
