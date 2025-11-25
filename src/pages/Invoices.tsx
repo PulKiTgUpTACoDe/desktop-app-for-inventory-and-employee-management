@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../types/electronAPI";
 import Header from "../components/Header";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -147,6 +148,21 @@ const Invoices: React.FC = () => {
   const handleDelete = (inv: any) => {
     setInvoiceToDelete(inv);
     setShowDeleteDialog(true);
+  };
+
+  const handleDownloadPDF = async (invoice: any) => {
+    try {
+      const result = await window.electronAPI.generateInvoicePDF(invoice.id);
+      
+      if (result.success) {
+        alert(`PDF generated successfully! Saved to: ${result.data.filePath}`);
+      } else {
+        throw new Error(result.error || 'Failed to generate PDF');
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert(`Error generating PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
   const confirmDelete = async () => {
@@ -459,6 +475,13 @@ const Invoices: React.FC = () => {
                                       title="Delete Invoice"
                                     >
                                       🗑️
+                                    </button>
+                                    <button
+                                      onClick={() => handleDownloadPDF(invoice)}
+                                      className="text-green-600 hover:text-green-800"
+                                      title="Download PDF"
+                                    >
+                                      📄
                                     </button>
                                   </div>
                                 </td>

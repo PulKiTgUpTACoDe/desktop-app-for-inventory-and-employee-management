@@ -105,4 +105,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Report API
   generateReport: (params: { months: number }) => ipcRenderer.invoke("generate-report", params),
   getReportPeriods: () => ipcRenderer.invoke("get-report-periods"),
+
+  generateInvoicePDF: (invoiceId: string) => ipcRenderer.invoke("generate-invoice-pdf", invoiceId),
 });

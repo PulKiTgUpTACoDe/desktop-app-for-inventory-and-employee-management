@@ -11,6 +11,7 @@ import { payrollHandlers } from './handlers/payroll_handler.js'
 import { invoiceHandlers } from './handlers/invoice_handler.js'
 import { paymentHandlers } from './handlers/payment_handler.js'
 import { reportHandlers } from './handlers/reportHandlers.js'
+import { pdfHandlers } from './handlers/pdfHandlers.js'
 import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 import Store from 'electron-store'
@@ -49,7 +50,8 @@ function createWindow() {
       sandbox: true
     },
     icon: join(__dirname, '../assets/icon.png'),
-    show: false
+    show: false,
+    autoHideMenuBar: true,
   })
 
   if (isDev) {
@@ -96,7 +98,8 @@ async function initApp() {
     payrollHandlers()
     invoiceHandlers()
     paymentHandlers()
-    reportHandlers() 
+    reportHandlers()
+    pdfHandlers() 
 
     createWindow()
 

@@ -95,6 +95,9 @@ declare global {
             // Report API
             generateReport: (params: ReportParams) => Promise<ReportResult>;
             getReportPeriods: () => Promise<ReportPeriod[]>;
+            
+            // Invoice PDF
+            generateInvoicePDF: (invoiceId: string) => Promise<{ success: boolean; data?: any; error?: any }>;
         };
 
         authAPI: {
