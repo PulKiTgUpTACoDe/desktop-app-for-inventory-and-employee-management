@@ -15,7 +15,7 @@ A Windows-only desktop application built with Electron.js, React, TypeScript, an
 - **Desktop**: Electron.js
 - **Build Tool**: Vite
 - **UI Components**: ShadCN UI
-- **Database**: PostgreSQL + Prisma (configured but not implemented yet)
+- **Database**: SqlLite + Prisma
 - **Package Manager**: npm
 
 ## Project Structure
